@@ -12,6 +12,8 @@
       <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css2?family=Viga&display=swap" rel="stylesheet">
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
       <!-- <link rel="stylesheet/less" type="text/css" href="scss/index.scss"> -->
       <style>
             *,
@@ -26,83 +28,9 @@
                   text-decoration: none;
             }
 
-            .progress-pie-chart {
-                  width: 200px;
-                  height: 200px;
-                  border-radius: 50%;
-                  background-color: #E5E5E5;
-                  position: relative;
-            }
-
-            .progress-pie-chart.gt-50 {
-                  background-color: #81CE97;
-            }
-
-            .ppc-progress {
-                  content: "";
-                  position: absolute;
-                  border-radius: 50%;
-                  left: calc(50% - 100px);
-                  top: calc(50% - 100px);
-                  width: 200px;
-                  height: 200px;
-                  clip: rect(0, 200px, 200px, 100px);
-            }
-
-            .ppc-progress .ppc-progress-fill {
-                  content: "";
-                  position: absolute;
-                  border-radius: 50%;
-                  left: calc(50% - 100px);
-                  top: calc(50% - 100px);
-                  width: 200px;
-                  height: 200px;
-                  clip: rect(0, 100px, 200px, 0);
-                  background: #81CE97;
-                  transform: rotate(60deg);
-            }
-
-            .gt-50 .ppc-progress {
-                  clip: rect(0, 100px, 200px, 0);
-            }
-
-            .gt-50 .ppc-progress .ppc-progress-fill {
-                  clip: rect(0, 200px, 200px, 100px);
-                  background: #E5E5E5;
-            }
-
-            .ppc-percents {
-                  content: "";
-                  position: absolute;
-                  border-radius: 50%;
-                  left: calc(50% - 173.9130434783px/2);
-                  top: calc(50% - 173.9130434783px/2);
-                  width: 173.9130434783px;
-                  height: 173.9130434783px;
-                  background: #fff;
-                  text-align: center;
-                  display: table;
-            }
-
-            .ppc-percents span {
-                  display: block;
-                  font-size: 2.6em;
-                  font-weight: bold;
-                  color: #81CE97;
-            }
-
-            .pcc-percents-wrapper {
-                  display: table-cell;
-                  vertical-align: middle;
-            }
-
             body {
                   font-family: 'Viga';
                   background: #f7f7f7;
-            }
-
-            .progress-pie-chart {
-                  margin: 50px auto 0;
             }
 
             .table-view {
@@ -139,6 +67,11 @@
             .navigasi .fitur:hover {
                   background-color: #28333e;
             }
+
+            .fitur {
+                  height: 55px;
+                  border-radius: 0px;
+            }
       </style>
       <script>
             $(document).ready(function() {
@@ -159,22 +92,20 @@
 
             <div class=" row">
                   <div class="col-3 menu-dashboard rounded-end shadow d-flex justify-content-center flex-column align-content-between">
-                        <div class="user rounded-pill">
-                              <?php
-                              if (isset($_COOKIE['user'])) :
-                                    $user = $_COOKIE['user']; ?>
-                                    <h3>
-                                          <?php echo $user; ?>
-                                    </h3>
-                              <?php endif; ?>
-                        </div>
                         <div class="d-flex flex-column justify-content-center text-center navigasi">
                               <a class="nav-link active" aria-current="page" href="#">Home</a>
                               <?php
                               if (isset($_COOKIE['user'])) : ?>
-                                    <div class="btn fitur"><a class="" href="#">Data Peminjaman</a></div>
-                                    <a class="nav-link" href="#">Manajemen Peralatan</a>
-                                    <a class="nav-link" href="#">Manajemen Pengguna</a>
+
+                                    <div class="btn fitur d-flex justify-content-center align-items-center"><span class="text-white  material-symbols-outlined">
+                                                edit_note
+                                          </span><a class="text-white align-items-center" href="#">&#160;Data Peminjaman</a></div>
+                                    <div class="btn fitur d-flex justify-content-center align-items-center"><span class="text-white  material-symbols-outlined">
+                                                home_repair_service
+                                          </span><a class="text-white align-items-center" href="#">&#160;Manajemen Peralatan</a></div>
+                                    <div class="btn fitur d-flex justify-content-center align-items-center"><span class="text-white  material-symbols-outlined">
+                                                manage_accounts
+                                          </span><a class="text-white align-items-center" href="#">&#160;Manajemen Pengguna</a></div>
                                     <form method="post" class="d-flex justify-content-center">
                                           <button name="logout" type="submit" formaction="login/index.php" class="btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;">
                                                 <span class="material-symbols-outlined">
