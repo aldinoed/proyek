@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS barang
     image_barang BLOB NOT NULL,
     nama_barang VARCHAR(255) NOT NULL,
     jumlah integer NOT NULL,
-    kategori  VARCHAR(255) NOT NULL,
+    kategori  VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS user
@@ -30,5 +30,5 @@ CREATE TABLE IF NOT EXISTS user
     nama_user VARCHAR(255) NOT NULL,
     username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    user_role VARCHAR(255) NOT NULL,
+    user_role VARCHAR(255) NOT NULL
 );
