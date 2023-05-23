@@ -19,16 +19,16 @@ CREATE TABLE IF NOT EXISTS public.barang
 (
     id_barang VARCHAR(255) PRIMARY KEY,
     image_barang BLOB NOT NULL,
-    nama_barang character varying(255) NOT NULL,
+    nama_barang VARCHAR(255) NOT NULL,
     jumlah integer NOT NULL,
-    kategori character varying NOT NULL,
+    kategori  VARCHAR(255) NOT NULL,
 );
 
 CREATE TABLE IF NOT EXISTS public."user"
 (
     id_user VARCHAR(255) PRIMARY KEY,
-    nama_user character varying(255) NOT NULL,
-    username character varying(255) NOT NULL,
-    password character varying(255) NOT NULL,
-    user_role character varying(255) NOT NULL,
+    nama_user VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    user_role VARCHAR(255) NOT NULL,
 );
