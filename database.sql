@@ -17,8 +17,8 @@
 -- Please log an issue at https://redmine.postgresql.org/projects/pgadmin4/issues/new if you find any bugs, including reproduction steps.
 CREATE TABLE IF NOT EXISTS public.barang
 (
-    id_barang uuid,
-    image_barang bytea NOT NULL,
+    id_barang VARCHAR(255) PRIMARY KEY,
+    image_barang BLOB NOT NULL,
     nama_barang character varying(255) NOT NULL,
     jumlah integer NOT NULL,
     kategori character varying NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS public.barang
 
 CREATE TABLE IF NOT EXISTS public."user"
 (
-    id_user uuid,
+    id_user VARCHAR(255) PRIMARY KEY,
     nama_user character varying(255) NOT NULL,
     username character varying(255) NOT NULL,
     password character varying(255) NOT NULL,
