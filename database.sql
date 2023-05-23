@@ -22,7 +22,6 @@ CREATE TABLE IF NOT EXISTS public.barang
     nama_barang character varying(255) NOT NULL,
     jumlah integer NOT NULL,
     kategori character varying NOT NULL,
-    PRIMARY KEY (id_barang)
 );
 
 CREATE TABLE IF NOT EXISTS public."user"
@@ -32,5 +31,4 @@ CREATE TABLE IF NOT EXISTS public."user"
     username character varying(255) NOT NULL,
     password character varying(255) NOT NULL,
     user_role character varying(255) NOT NULL,
-    PRIMARY KEY (id_user)
 );
