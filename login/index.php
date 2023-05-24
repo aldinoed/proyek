@@ -63,6 +63,7 @@
       </div>
 
       <?php
+      session_start();
       include '../connection.php';
       if (isset($_POST['login'])) {
             try {
@@ -78,6 +79,7 @@
 
                   $count = $statement->rowCount();
                   if ($count > 0) {
+                        $loggedUser = $_SESSION['user'] = $username;
                         if ($cookieAct === "yes") {
                               setcookie('user', $username, 0,  '/');
                         }

@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,6 +12,7 @@
       <!-- font -->
       <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css2?family=Viga&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
@@ -43,7 +45,7 @@
 
             .menu-dashboard {
                   background-color: #354458;
-                  width: 22%;
+                  width: 20%;
                   height: 100vh;
                   position: sticky;
                   color: white;
@@ -63,7 +65,6 @@
                   padding-left: 70px;
             }
 
-            .navigasi button:hover,
             .navigasi .fitur:hover {
                   background-color: #28333e;
             }
@@ -71,6 +72,11 @@
             .fitur {
                   height: 55px;
                   border-radius: 0px;
+                  width: 100%;
+            }
+
+            .fitur a {
+                  font-size: 16px;
             }
       </style>
       <script>
@@ -92,41 +98,41 @@
 
             <div class=" row">
                   <div class="col-3 menu-dashboard rounded-end shadow d-flex justify-content-center flex-column align-content-between">
-                        <div class="d-flex flex-column justify-content-center text-center navigasi">
-                              <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <div class="d-flex flex-column justify-content-start align-items-start text-center navigasi">
+                              <div class="btn fitur d-flex justify-content-center align-items-center" style="margin-left: 40px"><span class="text-white  material-symbols-outlined">
+                                          home
+                                    </span><a class="text-white align-items-center" href="">&#160;&#160;Beranda</a></div>
                               <?php
-                              if (isset($_COOKIE['user'])) : ?>
+                              if (isset($_COOKIE['user'])) { ?>
 
-                                    <div class="btn fitur d-flex justify-content-center align-items-center"><span class="text-white  material-symbols-outlined">
+                                    <div class="btn fitur d-flex justify-content-center align-items-center" style="padding-right: 40px"><span class="text-white  material-symbols-outlined">
                                                 edit_note
-                                          </span><a class="text-white align-items-center" href="#">&#160;Data Peminjaman</a></div>
+                                          </span><a class="text-white align-items-center" href="#">&#160;&#160;Data Peminjaman</a></div>
                                     <div class="btn fitur d-flex justify-content-center align-items-center"><span class="text-white  material-symbols-outlined">
                                                 home_repair_service
-                                          </span><a class="text-white align-items-center" href="#">&#160;Manajemen Peralatan</a></div>
-                                    <div class="btn fitur d-flex justify-content-center align-items-center"><span class="text-white  material-symbols-outlined">
+                                          </span><a class="text-white align-items-center" href="invman/index.php">&#160;&#160;Manajemen Peralatan</a></div>
+                                    <div class="btn fitur d-flex justify-content-center align-items-center">&#160;&#160;<span class="text-white  material-symbols-outlined">
                                                 manage_accounts
-                                          </span><a class="text-white align-items-center" href="#">&#160;Manajemen Pengguna</a></div>
-                                    <form method="post" class="d-flex justify-content-center">
-                                          <button name="logout" type="submit" formaction="login/index.php" class="btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;">
+                                          </span><a class="text-white align-items-center" href="#">&#160;&#160;Manajemen Pengguna</a></div>
+                                    <form method="post" class="d-flex justify-content-center fitur" style="padding-right: 100px">
+                                          <button name="logout" type="submit" formaction="login/index.php" class=" btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;">
                                                 <span class="material-symbols-outlined">
                                                       logout
-                                                </span>Logout
+                                                </span>&#160;&#160;Logout
                                           </button>
                                     </form>
-                              <?php endif ?>
+                              <?php } else if (!(isset($_SESSION['user']))) { ?>
+                                    <div method="post" class="d-flex justify-content-center fitur" style="padding-right: 100px">
+                                          <a name="login" type="submit" class=" btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;" href="../proyek/login/">
+                                                <span class="material-symbols-outlined">
+                                                      logout
+                                                </span>&#160;&#160;Login
+                                          </a>
+                                    </div>
+                              <?php } ?>
                         </div>
                   </div>
                   <div class="col-9">
-                        <!-- <div class="progress-pie-chart" data-percent="43">
-                              <div class="ppc-progress">
-                                    <div class="ppc-progress-fill"></div>
-                              </div>
-                              <div class="ppc-percents">
-                                    <div class="pcc-percents-wrapper">
-                                          <span>43%</span>
-                                    </div>
-                              </div>
-                        </div> -->
                         <div class="table-view overflow-auto">
                               <table class="table">
                                     <thead>
@@ -162,6 +168,7 @@
             </div>
       </div>
       <?php
+      session_start();
       if (isset($_POST['logout'])) {
             setcookie('user', '', time() - 100, 'login/');
             header('location: http://localhost:8080/wpw/proyek/login');
