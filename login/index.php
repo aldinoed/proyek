@@ -1,3 +1,9 @@
+<?php
+session_start();
+if (isset($_SESSION['user'])) {
+      header('location: http://localhost:8080/wpw/proyek');
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -63,7 +69,7 @@
       </div>
 
       <?php
-      session_start();
+      // session_start();
       include '../connection.php';
       if (isset($_POST['login'])) {
             try {
@@ -79,7 +85,14 @@
 
                   $count = $statement->rowCount();
                   if ($count > 0) {
-                        $loggedUser = $_SESSION['user'] = $username;
+                        $roleStmnt = "SELECT user_role FROM user WHERE username = :username";
+                        $stmnt = $connect->prepare($roleStmnt);
+                        $stmnt->bindParam(':username', $username);
+                        $stmnt->execute();
+                        $role = $stmnt->fetchColumn();
+                        $_SESSION['user'] = $username;
+                        $_SESSION['role'] = $role;
+
                         if ($cookieAct === "yes") {
                               setcookie('user', $username, 0,  '/');
                         }

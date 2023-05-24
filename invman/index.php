@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,130 +6,182 @@
       <meta charset="UTF-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Document</title>
-      <link rel="stylesheet" href="../css/bootstrap.min.css">
+      <title>SMART-ILS</title>
+      <link href="../css/bootstrap.min.css" rel="stylesheet">
+
+      <!-- font -->
+      <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Viga&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+      <!-- <link rel="stylesheet/less" type="text/css" href="scss/index.scss"> -->
       <style>
-            * {
+            *,
+            *:before,
+            *:after {
+                  box-sizing: border-box;
                   margin: 0;
                   padding: 0;
-                  font-family: 'Viga'
+            }
+
+            a {
+                  text-decoration: none;
+            }
+
+            body {
+                  font-family: 'Viga';
+                  background: #f7f7f7;
+            }
+
+            .table-view {
+                  height: 300px;
+            }
+
+            table {
+                  max-height: 300px;
+            }
+
+            .menu-dashboard {
+                  background-color: #354458;
+                  width: 20%;
+                  height: 100vh;
+                  position: sticky;
+                  color: white;
+                  padding: 0px;
+            }
+
+            .user {
+                  width: 70%;
+                  height: 45px;
+                  background-color: aqua;
+            }
+
+            .bar {
+                  background-color: #44a0dc;
+                  z-index: 999;
+                  padding-right: 70px;
+                  padding-left: 70px;
+            }
+
+            .navigasi .fitur:hover {
+                  background-color: #28333e;
+            }
+
+            .fitur {
+                  height: 55px;
+                  border-radius: 0px;
+                  width: 100%;
+            }
+
+            .fitur a {
+                  font-size: 16px;
             }
       </style>
+      <script>
+            $(document).ready(function() {
+                  $("#myModal").modal('show')
+            })
+      </script>
 </head>
 
-<body>
-      <div class="p-3 mb-2 bg-secondary text-white ">
-            <div class="align-self-center ">
-                  <p class="text-center fs-1 ">FORM PENGISIAN DATA BARANG LAB</p>
-                  <form style="height: 100vh; width: 40%; " class=" m-auto " method="POST" action="index.php">
-                        <!-- background-color: rgba(255,0,0,0.1);  -->
-                        <div class="row g-2 d-flex justify-content-center">
-                              <div>
-                                    <input class="form-control" type="text" placeholder="ID BARANG" aria-label="" name="id_barang">
-                              </div>
-                              <div class="col-md">
-                                    <div class="form-floating">
-                                          <input type="text" class="form-control" id="floatingInputGrid" placeholder="" value="" name="nama_barang">
-                                          <label for="floatingInputGrid">NAMA BARANG</label>
-                                    </div>
-                              </div>
-                              <div class="col-md">
-                                    <div class="form-floating">
-                                          <select class="form-select" id="floatingSelectGrid" aria-label="Floating label select example" name="kategori">
-                                                <option value="PC">PC</option>
-                                                <option value="PERIPHERAL" name="kategori">PERIPHERAL</option>
-                                                <option value="SOUND" name="kategori">SOUND</option>
-                                                <option value="KABEL" name="kategori">KABEL</option>
-                                                <option value="PROYEKTOR" name="kategori">PROYEKTOR</option>
-                                          </select>
-                                          <label for="floatingSelectGrid">KATEGORI</label>
-                                    </div>
-                              </div>
-                        </div>
-                        <div class="mt-2">
-                              <input class="form-control" type="text" placeholder="JUMLAH" aria-label="" name="jumlah">
-                        </div>
-                        <div class="mb-3">
-                              <label for="formFileMultiple" class="form-label">MASUKKAN FOTO KEADAAN BARANG SAAT INI!</label>
-                              <input class="form-control" type="file" id="formFileMultiple" multiple name="image">
-                        </div>
-                        <div class="d-grid gap-2 col-6 mx-auto">
-                              <input class="btn btn-success" type="submit" value="Submit" name="submit">
-                              <input class="btn btn-danger" type="reset" value="Clear">
-                        </div>
-                  </form>
-
+<body class="">
+      <div class="container-fluid">
+            <div class="bar fixed-top shadow d-flex justify-content-between align-items-center" style="height: 50px; " data-bs-theme="dark">
+                  <h4 class=" text-white mt-2">SLELS</h4>
+                  <p class="text-white mt-3">
+                        <?php if (isset($_SESSION['user'])) :
+                              echo $_SESSION['user'];
+                        endif ?></p>
             </div>
+            <div class=" row">
+                  <div class="col-3 menu-dashboard rounded-end shadow d-flex justify-content-center flex-column align-items-between">
+                        <div class="row mb-3 d-flex justify-content-center">
+                              <div>
+                                    <p class="ms-5"><?php echo $_SESSION['user'] ?></p>
+                              </div>
+                        </div>
+                        <div class="d-flex flex-column justify-content-start align-items-start text-center navigasi">
 
+                              <div class="btn fitur d-flex justify-content-center align-items-center" style="padding-right: 105px;width:100%"><span class="text-white  material-symbols-outlined">
+                                          home
+                                    </span><a class="text-white align-items-center" href="">&#160;&#160;Beranda</a></div>
+                              <?php
+                              if (isset($_SESSION['user'])) { ?>
 
+                                    <div class="btn fitur d-flex justify-content-center align-items-center" style="padding-right: 40px"><span class="text-white  material-symbols-outlined">
+                                                edit_note
+                                          </span><a class="text-white align-items-center" href="#">&#160;&#160;Data Peminjaman</a></div>
+                                    <div class="btn fitur d-flex justify-content-center align-items-center"><span class="text-white  material-symbols-outlined">
+                                                home_repair_service
+                                          </span><a class="text-white align-items-center" href="invman/index.php">&#160;&#160;Manajemen Peralatan</a></div>
+                                    <div class="btn fitur d-flex justify-content-center align-items-center">&#160;&#160;<span class="text-white  material-symbols-outlined">
+                                                manage_accounts
+                                          </span><a class="text-white align-items-center" href="#">&#160;&#160;Manajemen Pengguna</a></div>
+                                    <form method="post" class="d-flex justify-content-center fitur" style="padding-right: 100px">
+                                          <button name="logout" type="submit" formaction="login/index.php" class=" btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;">
+                                                <span class="material-symbols-outlined">
+                                                      logout
+                                                </span>&#160;&#160;Logout
+                                          </button>
+                                    </form>
+                              <?php } else if (!(isset($_SESSION['user']))) { ?>
+                                    <div method="post" class="d-flex justify-content-center fitur" style="padding-right: 100px">
+                                          <a name="login" type="submit" class=" btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;" href="../proyek/login/">
+                                                <span class="material-symbols-outlined">
+                                                      logout
+                                                </span>&#160;&#160;Login
+                                          </a>
+                                    </div>
+                              <?php } ?>
+                        </div>
+                  </div>
+                  <div class="col-9">
+                        <div class="table-view overflow-auto">
+                              <table class="table">
+                                    <thead>
+                                          <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">First</th>
+                                                <th scope="col">Last</th>
+                                                <th scope="col">Handle</th>
+                                          </tr>
+                                    </thead>
+                                    <tbody>
+                                          <tr>
+                                                <th scope="row">1</th>
+                                                <td>Mark</td>
+                                                <td>Otto</td>
+                                                <td>@mdo</td>
+                                          </tr>
+                                          <tr>
+                                                <th scope="row">2</th>
+                                                <td>Jacob</td>
+                                                <td>Thornton</td>
+                                                <td>@fat</td>
+                                          </tr>
+                                          <tr>
+                                                <th scope="row">3</th>
+                                                <td colspan="2">Larry the Bird</td>
+                                                <td>@twitter</td>
+                                          </tr>
+                                    </tbody>
+                              </table>
+                        </div>
+                  </div>
+            </div>
       </div>
-
       <?php
-      include 'connection.php';
-
-      // Memeriksa apakah terjadi error koneksi
-      // if (mysqli_connect_errno()) {
-      //     echo "Koneksi database gagal: " . mysqli_connect_error();
-      //     exit();
-      // }
-
-      // Mengambil data dari form
-      if (isset($_POST['submit'])) {
-            $idBarang = $_POST["id_barang"];
-            $namaBarang = $_POST["nama_barang"];
-            $kategori = $_POST["kategori"];
-            $jumlah = $_POST["jumlah"];
-            $image = $_POST["image"];
-            $connect->exec("USE proyek");
-            // Query untuk menyimpan data ke dalam tabel
-            $query = "INSERT INTO `barang` (`id_barang`, `image_barang`, `nama_barang`, `jumlah`, `kategori`) VALUES ('$idBarang', '$image', '$namaBarang', '$jumlah', '$kategori')";
-            echo $query;
-            $statement = $connect->prepare($query);
-            $result = $statement->execute();
-
-
-            if ($result == true) {
-                  echo "<script> alert(\"Berhasil\")</script>";
-            } else {
-                  echo "Error: ";
-            }
+      if (isset($_POST['logout'])) {
+            // setcookie('user', '', time() - 100, 'login/');
+            session_destroy();
+            header('location: http://localhost:8080/wpw/proyek/login');
       }
-
-      // // Menutup koneksi ke database
-      // mysqli_close($conn);
       ?>
-      ?>
+      <script src="js/bootstrap.bundle.min.js"></script>
+      <script src="js/jquery-3.6.1.min.js"></script>
+      <script src="js/index.js"></script>
 </body>
 
 </html>
-<!--
-      // include '../proyek/connection.php';
-
-      // Memeriksa apakah terjadi error koneksi
-      // if (mysqli_connect_errno()) {
-      //     echo "Koneksi database gagal: " . mysqli_connect_error();
-      //     exit();
-      // }
-
-      // Mengambil data dari form
-      // $idBarang = $_POST["id_barang"];
-      // $namaBarang = $_POST["nama_barang"];
-      // $kategori = $_POST["kategori"];
-      // $jumlah = $_POST["jumlah"];
-      // $image = $_POST["image"];
-
-      // Query untuk menyimpan data ke dalam tabel
-      // $query = $connect->exec("INSERT INTO `barang` (`id_barang`, `nama_barang`, `kategori`, `jumlah`, `image_barang`) VALUES ('$idBarang', '$namaBarang', '$kategori', '$jumlah', '$image')"); 
-      // echo $query;
-
-
-      // if ($query == true) {
-      //     echo "Data berhasil disimpan.";
-      // } else {
-      //     echo "Error: " . $query . "<br>" . mysqli_error($connect);
-      // }
-
-      // // Menutup koneksi ke database
-      // mysqli_close($conn);
-      // 
-      ?> -->

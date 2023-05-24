@@ -1,4 +1,8 @@
-<?php session_start(); ?>
+<?php
+session_start();
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -91,19 +95,30 @@
             <div class="bar fixed-top shadow d-flex justify-content-between align-items-center" style="height: 50px; " data-bs-theme="dark">
                   <h4 class=" text-white mt-2">SLELS</h4>
                   <p class="text-white mt-3">
-                        <?php if (isset($_COOKIE['user'])) :
-                              echo $_COOKIE['user'];
+                        <?php if (isset($_SESSION['user'])) :
+                              echo $_SESSION['user'];
                         endif ?></p>
             </div>
 
             <div class=" row">
                   <div class="col-3 menu-dashboard rounded-end shadow d-flex justify-content-center flex-column align-content-between">
-                        <div class="d-flex flex-column justify-content-start align-items-start text-center navigasi">
-                              <div class="btn fitur d-flex justify-content-center align-items-center" style="margin-left: 40px"><span class="text-white  material-symbols-outlined">
+                        <div class="d-flex flex-column justify-content-center  navigasi">
+                              <div style="margin-left: 40px;" class="">
+                                    <?php
+                                    if (isset($_SESSION['user'])) : ?>
+                                          <h5>
+                                                <?php echo $_SESSION['user'] ?>
+                                          </h5>
+                                          <p>
+                                                <?php echo $_SESSION['role'] ?>
+                                          </p>
+                                    <?php endif ?>
+                              </div>
+                              <div class="btn fitur d-flex justify-content-center align-items-center" style="padding-right: 105px;width:100%"><span class="text-white  material-symbols-outlined">
                                           home
                                     </span><a class="text-white align-items-center" href="">&#160;&#160;Beranda</a></div>
                               <?php
-                              if (isset($_COOKIE['user'])) { ?>
+                              if (isset($_SESSION['user'])) { ?>
 
                                     <div class="btn fitur d-flex justify-content-center align-items-center" style="padding-right: 40px"><span class="text-white  material-symbols-outlined">
                                                 edit_note
@@ -115,7 +130,7 @@
                                                 manage_accounts
                                           </span><a class="text-white align-items-center" href="#">&#160;&#160;Manajemen Pengguna</a></div>
                                     <form method="post" class="d-flex justify-content-center fitur" style="padding-right: 100px">
-                                          <button name="logout" type="submit" formaction="login/index.php" class=" btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;">
+                                          <button name="logout" type="submit" formaction="logout.php" class=" btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;">
                                                 <span class="material-symbols-outlined">
                                                       logout
                                                 </span>&#160;&#160;Logout
@@ -167,13 +182,7 @@
                   </div>
             </div>
       </div>
-      <?php
-      session_start();
-      if (isset($_POST['logout'])) {
-            setcookie('user', '', time() - 100, 'login/');
-            header('location: http://localhost:8080/wpw/proyek/login');
-      }
-      ?>
+
       <script src="js/bootstrap.bundle.min.js"></script>
       <script src="js/jquery-3.6.1.min.js"></script>
       <script src="js/index.js"></script>
