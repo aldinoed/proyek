@@ -128,7 +128,7 @@ session_start();
                                           </span><a class="text-white align-items-center" href="invman/index.php">&#160;&#160;Manajemen Peralatan</a></div>
                                     <div class="btn fitur d-flex justify-content-center align-items-center">&#160;&#160;<span class="text-white  material-symbols-outlined">
                                                 manage_accounts
-                                          </span><a class="text-white align-items-center" href="#">&#160;&#160;Manajemen Pengguna</a></div>
+                                          </span><a class="text-white align-items-center" href="userman/">&#160;&#160;Manajemen Pengguna</a></div>
                                     <form method="post" class="d-flex justify-content-center fitur" style="padding-right: 100px">
                                           <button name="logout" type="submit" formaction="logout.php" class=" btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;">
                                                 <span class="material-symbols-outlined">
