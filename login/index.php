@@ -94,7 +94,7 @@ if (isset($_SESSION['user'])) {
                         $_SESSION['role'] = $role;
 
                         if ($cookieAct === "yes") {
-                              setcookie('user', $username, 0,  '/');
+                              setcookie('user', $username, time() + 900,  '/');
                         }
                         header('location:  http://localhost:8080/wpw/proyek');
                   } else {
