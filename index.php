@@ -90,7 +90,7 @@ session_start();
       </script>
 </head>
 
-<body class="">
+<body class="secondary">
       <div class="container-fluid">
             <div class="bar fixed-top shadow d-flex justify-content-between align-items-center" style="height: 50px; " data-bs-theme="dark">
                   <h4 class=" text-white mt-2">SLELS</h4>
@@ -118,25 +118,27 @@ session_start();
                                           home
                                     </span><a class="text-white align-items-center" href="">&#160;&#160;Beranda</a></div>
                               <?php
-                              if (isset($_SESSION['user'])) { ?>
+                              if (isset($_SESSION['role'])) {
+                                    if ($_SESSION['role'] === 'admin') { ?>
 
-                                    <div class="btn fitur d-flex justify-content-center align-items-center" style="padding-right: 40px"><span class="text-white  material-symbols-outlined">
-                                                edit_note
-                                          </span><a class="text-white align-items-center" href="#">&#160;&#160;Data Peminjaman</a></div>
-                                    <div class="btn fitur d-flex justify-content-center align-items-center"><span class="text-white  material-symbols-outlined">
-                                                home_repair_service
-                                          </span><a class="text-white align-items-center" href="invman/index.php">&#160;&#160;Manajemen Peralatan</a></div>
-                                    <div class="btn fitur d-flex justify-content-center align-items-center">&#160;&#160;<span class="text-white  material-symbols-outlined">
-                                                manage_accounts
-                                          </span><a class="text-white align-items-center" href="userman/">&#160;&#160;Manajemen Pengguna</a></div>
-                                    <form method="post" class="d-flex justify-content-center fitur" style="padding-right: 100px">
-                                          <button name="logout" type="submit" formaction="logout.php" class=" btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;">
-                                                <span class="material-symbols-outlined">
-                                                      logout
-                                                </span>&#160;&#160;Logout
-                                          </button>
-                                    </form>
-                              <?php } else if (!(isset($_SESSION['user']))) { ?>
+                                          <div class="btn fitur d-flex justify-content-center align-items-center" style="padding-right: 40px"><span class="text-white  material-symbols-outlined">
+                                                      edit_note
+                                                </span><a class="text-white align-items-center" href="#">&#160;&#160;Data Peminjaman</a></div>
+                                          <div class="btn fitur d-flex justify-content-center align-items-center"><span class="text-white  material-symbols-outlined">
+                                                      home_repair_service
+                                                </span><a class="text-white align-items-center" href="invman/index.php">&#160;&#160;Manajemen Peralatan</a></div>
+                                          <div class="btn fitur d-flex justify-content-center align-items-center">&#160;&#160;<span class="text-white  material-symbols-outlined">
+                                                      manage_accounts
+                                                </span><a class="text-white align-items-center" href="userman/">&#160;&#160;Manajemen Pengguna</a></div>
+                                          <form method="post" class="d-flex justify-content-center fitur" style="padding-right: 100px">
+                                                <button name="logout" type="submit" formaction="logout.php" class=" btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;">
+                                                      <span class="material-symbols-outlined">
+                                                            logout
+                                                      </span>&#160;&#160;Logout
+                                                </button>
+                                          </form>
+                                    <?php }
+                              } else if (!(isset($_SESSION['user']))) { ?>
                                     <div method="post" class="d-flex justify-content-center fitur" style="padding-right: 100px">
                                           <a name="login" type="submit" class=" btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;" href="../proyek/login/">
                                                 <span class="material-symbols-outlined">

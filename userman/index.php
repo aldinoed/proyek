@@ -1,10 +1,38 @@
 <?php
 session_start();
+include '../connection.php';
+$connect->exec("USE proyek");
+$limit = isset($_POST["limit-records"]) ? $_POST["limit-records"] : 5000;
+$page = isset($_GET['page']) ? $_GET['page'] : 1;
+$start = ($page - 1) * $limit;
+$result = $connect->query("SELECT * FROM user LIMIT $start, $limit");
+$customers = $result->fetchAll(PDO::FETCH_ASSOC);
+
+$result1 = $connect->query("SELECT count(id_user) AS id FROM user");
+$custCount = $result1->fetchAll(PDO::FETCH_ASSOC);
+$total = $custCount['id'];
+$pages = ceil($total / $limit);
+
+$Previous = $page - 1;
+$Next = $page + 1;
+
 if (!(isset($_SESSION['user']))) {
       header('location: http://localhost:8080/wpw/proyek');
 }
-?>
 
+if (isset($_POST['delete'])) {
+      try {
+            $selectedNRP = $_POST['selectedNrp'];
+            $connect->exec("USE proyek");
+            $query = "DELETE FROM user WHERE id_user = :nrp";
+            $statement = $connect->prepare($query);
+            $statement->bindParam(':nrp', $selectedNRP);
+            $statement->execute();
+      } catch (PDOException $e) {
+            echo $e->getMessage();
+      }
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -93,7 +121,7 @@ if (!(isset($_SESSION['user']))) {
       </script>
 </head>
 
-<body class="">
+<body class="" style="background-color: #ddd;">
       <div class="container-fluid">
             <div class="bar fixed-top shadow d-flex justify-content-between align-items-center" style="height: 50px; " data-bs-theme="dark">
                   <h4 class=" text-white mt-2">SLELS</h4>
@@ -151,18 +179,33 @@ if (!(isset($_SESSION['user']))) {
                         </div>
                   </div>
                   <!-- table section -->
-                  <div class="col-9 mt-5 ms-4">
-                        <div class="table-view overflow-auto">
-                              <table class="table table-striped">
-                                    <thead>
-                                          <tr>
+                  <div class="col-9  ms-auto me-auto bg-white rounded-2 pt-3" style="max-height:80vh; margin-top:80px;">
+                        <div class="d-flex align-items-center  justify-content-between ps-1 pe-4">
+                              <button class="btn-primary btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                                          <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
+                                    </svg><a href="input-pengguna.php" class="text-white">Tambah</a>
+                              </button>
+                              <form method="post" action="#">
+                                    <select name="limit-records" id="limit-records">
+                                          <option disabled="disabled" selected="selected">Show</option>
+                                          <?php foreach ([10, 100, 500, 1000, 5000] as $limit) : ?>
+                                                <option <?php if (isset($_POST["limit-records"]) && $_POST["limit-records"] == $limit) echo "selected" ?> value="<?= $limit; ?>"><?= $limit; ?></option>
+                                          <?php endforeach; ?>
+                                    </select>
+                              </form>
+                        </div>
+                        <div class="table-view overflow-auto" style="height:80%;">
+                              <table class="table table-striped ">
+                                    <tr>
+                                          <thead>
+
                                                 <th scope="col">No.</th>
                                                 <th scope="col">Nama</th>
                                                 <th scope="col">NRP</th>
                                                 <th scope="col">Telepon</th>
                                                 <th scope="col">Role</th>
-                                                <th scope="col">Action</th>
-                                          </tr>
+                                                <th scope="col" class="ms-4">Action</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
                                           <?php
@@ -180,17 +223,22 @@ if (!(isset($_SESSION['user']))) {
                                                       <td><?php echo $user['id_user']; ?></td>
                                                       <td><?php echo $user['telepon']; ?></td>
                                                       <td><?php echo $user['user_role']; ?></td>
-                                                      <td>
-                                                            <form action="GET"><button class="btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                      <td class="d-flex justify-content-start">
+                                                            <form method="GET" action="update.php">
+                                                                  <button class="btn btn-warning" name="update" value="<?= $user['id_user']; ?>"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                                                               <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                                                                               <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
                                                                         </svg></button>
-                                                                  <form action="GET"><button class="btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                                                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                                                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
-                                                                              </svg></button></form>
                                                             </form>
-
+                                                            <form method="POST" action="">
+                                                                  <input type="hidden" name="selectedNrp" value="<?= $user['id_user'];  ?>">
+                                                                  <button class="btn btn-danger" name="delete">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                                              <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                                                                              <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                                                                        </svg>
+                                                                  </button>
+                                                            </form>
                                                       </td>
                                                 </tr>
                                           <?php $i++;
@@ -198,13 +246,38 @@ if (!(isset($_SESSION['user']))) {
                                     </tbody>
                               </table>
                         </div>
+                        <div class="row">
+                              <div class="row">
+                                    <div class="col-md-10">
+                                          <nav aria-label="Page navigation">
+                                                <ul class="pagination">
+                                                      <li>
+                                                            <a href="index.php?page=<?= $Previous; ?>" aria-label="Previous">
+                                                                  <span aria-hidden="true">&laquo; Previous</span>
+                                                            </a>
+                                                      </li>
+                                                      <?php for ($i = 1; $i <= $pages; $i++) : ?>
+                                                            <li><a href="index.php?page=<?= $i; ?>"><?= $i; ?></a></li>
+                                                      <?php endfor; ?>
+                                                      <li>
+                                                            <a href="index.php?page=<?= $Next; ?>" aria-label="Next">
+                                                                  <span aria-hidden="true">Next &raquo;</span>
+                                                            </a>
+                                                      </li>
+                                                </ul>
+                                          </nav>
+                                    </div>
+                              </div>
+                        </div>
                   </div>
             </div>
-      </div>
 
-      <script src="../js/bootstrap.bundle.min.js"></script>
-      <script src="../js/jquery-3.6.1.min.js"></script>
-      <script src="../js/index.js"></script>
+            <script src="../js/bootstrap.bundle.min.js"></script>
+            <script src="../js/jquery-3.6.1.min.js"></script>
+            <script src="../js/index.js"></script>
+            <?php
+
+            ?>
 </body>
 
 </html>

@@ -85,12 +85,17 @@ if (isset($_SESSION['user'])) {
 
                   $count = $statement->rowCount();
                   if ($count > 0) {
+                        $sesStmnt = "SELECT nama_user FROM user WHERE username = :username";
+                        $name = $connect->prepare($sesStmnt);
+                        $name->bindParam(':username', $username);
+                        $name->execute();
+                        $selectedName = $name->fetchColumn();
+                        $_SESSION['user'] = $selectedName;
                         $roleStmnt = "SELECT user_role FROM user WHERE username = :username";
                         $stmnt = $connect->prepare($roleStmnt);
                         $stmnt->bindParam(':username', $username);
                         $stmnt->execute();
                         $role = $stmnt->fetchColumn();
-                        $_SESSION['user'] = $username;
                         $_SESSION['role'] = $role;
 
                         if ($cookieAct === "yes") {
