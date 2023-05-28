@@ -32,3 +32,12 @@ CREATE TABLE IF NOT EXISTS user
     password VARCHAR(255) NOT NULL,
     user_role VARCHAR(255) NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS peminjaman(
+      id_peminjaman VARCHAR(255) PRIMARY KEY,
+      id_user VARCHAR(255) NOT NULL,
+      id_barang VARCHAR(255) NOT NULL,
+      tanggal_pengembalian DATE NOT NULL,
+      isReturn BOOLEAN NOT NULL,
+      ADD CONSTRAINT uKey
+);

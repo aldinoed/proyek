@@ -120,7 +120,6 @@ session_start();
                               <?php
                               if (isset($_SESSION['role'])) {
                                     if ($_SESSION['role'] === 'admin') { ?>
-
                                           <div class="btn fitur d-flex justify-content-center align-items-center" style="padding-right: 40px"><span class="text-white  material-symbols-outlined">
                                                       edit_note
                                                 </span><a class="text-white align-items-center" href="#">&#160;&#160;Data Peminjaman</a></div>
@@ -137,7 +136,19 @@ session_start();
                                                       </span>&#160;&#160;Logout
                                                 </button>
                                           </form>
-                                    <?php }
+                                    <?php } else if ($_SESSION['role'] === 'mahasiswa' || $_SESSION['role'] === 'dosen') { ?>
+                                          <div class="btn fitur d-flex justify-content-center align-items-center " style="padding-right:60px"><span class="material-symbols-outlined text-white">
+                                                      home_repair_service
+                                                </span><a class="text-white align-items-center" href="pinjam/">&#160;&#160;Pinjam Barang</a>
+                                          </div>
+                                          <form method="post" class="d-flex justify-content-center fitur" style="padding-right: 100px">
+                                                <button name="logout" type="submit" formaction="logout.php" class=" btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;">
+                                                      <span class="material-symbols-outlined">
+                                                            logout
+                                                      </span>&#160;&#160;Logout
+                                                </button>
+                                          </form>
+                                    <?php  }
                               } else if (!(isset($_SESSION['user']))) { ?>
                                     <div method="post" class="d-flex justify-content-center fitur" style="padding-right: 100px">
                                           <a name="login" type="submit" class=" btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;" href="../proyek/login/">

@@ -1,9 +1,6 @@
 <?php
 session_start();
 include '../connection.php';
-if ($_SESSION['role'] !== 'admin') {
-      header('location: http://localhost:8080/wpw/proyek');
-}
 $connect->exec("USE proyek");
 // $limit = isset($_POST["limit-records"]) ? $_POST["limit-records"] : 5000;
 // $page = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -69,6 +66,7 @@ if (isset($_POST['delete'])) {
       <!-- font -->
       <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css2?family=Viga&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
@@ -173,25 +171,32 @@ if (isset($_POST['delete'])) {
                                           home
                                     </span><a class="text-white align-items-center" href="">&#160;&#160;Beranda</a></div>
                               <?php
-                              if (isset($_SESSION['user'])) { ?>
+                              if (isset($_SESSION['user'])) {
 
-                                    <div class="btn fitur d-flex justify-content-center align-items-center" style="padding-right: 40px"><span class="text-white  material-symbols-outlined">
-                                                edit_note
-                                          </span><a class="text-white align-items-center" href="#">&#160;&#160;Data Peminjaman</a></div>
-                                    <div class="btn fitur d-flex justify-content-center align-items-center"><span class="text-white  material-symbols-outlined">
-                                                home_repair_service
-                                          </span><a class="text-white align-items-center" href="invman/index.php">&#160;&#160;Manajemen Peralatan</a></div>
-                                    <div class="btn fitur d-flex justify-content-center align-items-center">&#160;&#160;<span class="text-white  material-symbols-outlined">
-                                                manage_accounts
-                                          </span><a class="text-white align-items-center" href="">&#160;&#160;Manajemen Pengguna</a></div>
-                                    <form method="post" class="d-flex justify-content-center fitur" style="padding-right: 100px">
-                                          <button name="logout" type="submit" formaction="logout.php" class=" btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;">
-                                                <span class="material-symbols-outlined">
-                                                      logout
-                                                </span>&#160;&#160;Logout
-                                          </button>
-                                    </form>
-                              <?php } else if (!(isset($_SESSION['user']))) { ?>
+                                    if ($_SESSION['role'] === 'admin') { ?>
+                                          <div class="btn fitur d-flex justify-content-center align-items-center" style="padding-right: 40px"><span class="text-white  material-symbols-outlined">
+                                                      edit_note
+                                                </span><a class="text-white align-items-center" href="#">&#160;&#160;Data Peminjaman</a></div>
+                                          <div class="btn fitur d-flex justify-content-center align-items-center"><span class="text-white  material-symbols-outlined">
+                                                      home_repair_service
+                                                </span><a class="text-white align-items-center" href="invman/index.php">&#160;&#160;Manajemen Peralatan</a></div>
+                                          <div class="btn fitur d-flex justify-content-center align-items-center">&#160;&#160;<span class="text-white  material-symbols-outlined">
+                                                      manage_accounts
+                                                </span><a class="text-white align-items-center" href="userman/">&#160;&#160;Manajemen Pengguna</a></div>
+                                          <form method="post" class="d-flex justify-content-center fitur" style="padding-right: 100px">
+                                                <button name="logout" type="submit" formaction="logout.php" class=" btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;">
+                                                      <span class="material-symbols-outlined">
+                                                            logout
+                                                      </span>&#160;&#160;Logout
+                                                </button>
+                                          </form>
+                                    <?php } else if ($_SESSION['role'] === 'mahasiswa' || $_SESSION['role'] === 'dosen') { ?>
+                                          <div class="btn fitur d-flex justify-content-center align-items-center"><span class="material-symbols-outlined">
+                                                      home_repair_service
+                                                </span><a class="text-white align-items-center" href="pinjam/">&#160;&#160;Manajemen Peralatan</a></div>
+
+                                    <?php }
+                              } else if (!(isset($_SESSION['user']))) { ?>
                                     <div method="post" class="d-flex justify-content-center fitur" style="padding-right: 100px">
                                           <a name="login" type="submit" class=" btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;" href="../proyek/login/">
                                                 <span class="material-symbols-outlined">

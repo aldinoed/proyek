@@ -10,8 +10,3 @@ $(function () {
       $('.ppc-percents span').html(percent + '%');
 })
 
-$(document).ready(function () {
-      $("#limit-records").change(function () {
-            $('form').submit();
-      })
-})
