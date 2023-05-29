@@ -171,39 +171,19 @@ if (isset($_POST['delete'])) {
                                           home
                                     </span><a class="text-white align-items-center" href="">&#160;&#160;Beranda</a></div>
                               <?php
-                              if (isset($_SESSION['user'])) {
-
-                                    if ($_SESSION['role'] === 'admin') { ?>
-                                          <div class="btn fitur d-flex justify-content-center align-items-center" style="padding-right: 40px"><span class="text-white  material-symbols-outlined">
-                                                      edit_note
-                                                </span><a class="text-white align-items-center" href="#">&#160;&#160;Data Peminjaman</a></div>
-                                          <div class="btn fitur d-flex justify-content-center align-items-center"><span class="text-white  material-symbols-outlined">
-                                                      home_repair_service
-                                                </span><a class="text-white align-items-center" href="invman/index.php">&#160;&#160;Manajemen Peralatan</a></div>
-                                          <div class="btn fitur d-flex justify-content-center align-items-center">&#160;&#160;<span class="text-white  material-symbols-outlined">
-                                                      manage_accounts
-                                                </span><a class="text-white align-items-center" href="userman/">&#160;&#160;Manajemen Pengguna</a></div>
-                                          <form method="post" class="d-flex justify-content-center fitur" style="padding-right: 100px">
-                                                <button name="logout" type="submit" formaction="logout.php" class=" btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;">
-                                                      <span class="material-symbols-outlined">
-                                                            logout
-                                                      </span>&#160;&#160;Logout
-                                                </button>
-                                          </form>
-                                    <?php } else if ($_SESSION['role'] === 'mahasiswa' || $_SESSION['role'] === 'dosen') { ?>
-                                          <div class="btn fitur d-flex justify-content-center align-items-center"><span class="material-symbols-outlined">
-                                                      home_repair_service
-                                                </span><a class="text-white align-items-center" href="pinjam/">&#160;&#160;Manajemen Peralatan</a></div>
-
-                                    <?php }
-                              } else if (!(isset($_SESSION['user']))) { ?>
-                                    <div method="post" class="d-flex justify-content-center fitur" style="padding-right: 100px">
-                                          <a name="login" type="submit" class=" btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;" href="../proyek/login/">
+                              if ($_SESSION['role'] === 'mahasiswa' || $_SESSION['role'] === 'dosen') { ?>
+                                    <div class="btn fitur d-flex justify-content-center align-items-center " style="padding-right:60px"><span class="material-symbols-outlined text-white">
+                                                home_repair_service
+                                          </span><a class="text-white align-items-center" href="pinjam/">&#160;&#160;Pinjam Barang</a>
+                                    </div>
+                                    <form method="post" class="d-flex justify-content-center fitur" style="padding-right: 100px">
+                                          <button name="logout" type="submit" formaction="logout.php" class=" btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;">
                                                 <span class="material-symbols-outlined">
                                                       logout
-                                                </span>&#160;&#160;Login
-                                          </a>
-                                    </div>
+                                                </span>&#160;&#160;Logout
+                                          </button>
+                                    </form>
+
                               <?php } ?>
                         </div>
                   </div>
@@ -212,7 +192,7 @@ if (isset($_POST['delete'])) {
                         <div class="d-flex align-items-center  justify-content-between ps-1 pe-4 mb-2">
                               <button class="btn-primary btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                                           <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
-                                    </svg><a href="input-pengguna.php" class="text-white">Tambah</a>
+                                    </svg><a href="percobaan.php" class="text-white">Pinjam</a>
                               </button>
                               <form method="post" action="#">
                                     <select name="limit-records" id="limit-records">
@@ -228,19 +208,18 @@ if (isset($_POST['delete'])) {
                                     <tr>
                                           <thead>
 
-                                                <th scope="col">No.</th>
-                                                <th scope="col">Nama</th>
-                                                <th scope="col">NRP</th>
-                                                <th scope="col">Telepon</th>
-                                                <th scope="col">Role</th>
-                                                <th scope="col" class="ms-4">Action</th>
+                                                <th scope="col">Id</th>
+                                                <th scope="col">Barang</th>
+                                                <th scope="col">Jumlah</th>
+                                                <th scope="col">Tanggal Pengembalian</th>
+                                                <th scope="col">Status</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                           <?php
                                           include '../connection.php';
                                           $connect->exec("USE proyek");
-                                          $query = "SELECT * FROM user";
+                                          $query = "SELECT * FROM peminjaman WHERE id_user = 31987891 ";
                                           $statement = $connect->prepare($query);
                                           $statement->execute();
                                           $users = $statement->fetchAll();
@@ -310,9 +289,6 @@ if (isset($_POST['delete'])) {
                         })
                   })
             </script>
-            <?php
-
-            ?>
 </body>
 
 </html>
