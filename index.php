@@ -122,7 +122,7 @@ session_start();
                                     if ($_SESSION['role'] === 'admin') { ?>
                                           <div class="btn fitur d-flex justify-content-center align-items-center" style="padding-right: 40px"><span class="text-white  material-symbols-outlined">
                                                       edit_note
-                                                </span><a class="text-white align-items-center" href="#">&#160;&#160;Data Peminjaman</a></div>
+                                                </span><a class="text-white align-items-center" href="peminjaman/">&#160;&#160;Data Peminjaman</a></div>
                                           <div class="btn fitur d-flex justify-content-center align-items-center"><span class="text-white  material-symbols-outlined">
                                                       home_repair_service
                                                 </span><a class="text-white align-items-center" href="invman/index.php">&#160;&#160;Manajemen Peralatan</a></div>

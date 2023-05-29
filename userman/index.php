@@ -177,7 +177,7 @@ if (isset($_POST['delete'])) {
 
                                     <div class="btn fitur d-flex justify-content-center align-items-center" style="padding-right: 40px"><span class="text-white  material-symbols-outlined">
                                                 edit_note
-                                          </span><a class="text-white align-items-center" href="#">&#160;&#160;Data Peminjaman</a></div>
+                                          </span><a class="text-white align-items-center" href="../peminjaman/">&#160;&#160;Data Peminjaman</a></div>
                                     <div class="btn fitur d-flex justify-content-center align-items-center"><span class="text-white  material-symbols-outlined">
                                                 home_repair_service
                                           </span><a class="text-white align-items-center" href="invman/index.php">&#160;&#160;Manajemen Peralatan</a></div>
@@ -185,7 +185,7 @@ if (isset($_POST['delete'])) {
                                                 manage_accounts
                                           </span><a class="text-white align-items-center" href="">&#160;&#160;Manajemen Pengguna</a></div>
                                     <form method="post" class="d-flex justify-content-center fitur" style="padding-right: 100px">
-                                          <button name="logout" type="submit" formaction="logout.php" class=" btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;">
+                                          <button name="logout" type="submit" formaction="../logout.php" class=" btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;">
                                                 <span class="material-symbols-outlined">
                                                       logout
                                                 </span>&#160;&#160;Logout
@@ -228,7 +228,7 @@ if (isset($_POST['delete'])) {
                                                 <th scope="col">NRP</th>
                                                 <th scope="col">Telepon</th>
                                                 <th scope="col">Role</th>
-                                                <th scope="col" class="ms-4">Action</th>
+                                                <th scope="col" class="ms-5">Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>

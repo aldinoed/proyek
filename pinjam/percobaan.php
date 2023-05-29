@@ -14,24 +14,28 @@
                   padding: 0;
                   font-family: 'Viga'
             }
+
+            select {
+                  max-height: 50px;
+                  padding-bottom: 30px;
+            }
       </style>
 </head>
 
 <body>
       <div class="container">
             <form action="percobaan.php" method="POST">
-                  <h1 class="d-flex justify-content-center"><span class="badge bg-secondary">FORM</span>Peminjaman Barang Lab</h1>
-                  <div class="row">
-                        <div class="col">
+                  <h1 class="d-flex justify-content-center">Form Peminjaman Barang Lab</h1>
+                  <div class=" mt-5 row ms-auto me-auto overflow-auto" style="width:90%;">
+                        <div class="col ">
                               <ul class="list-group">
-                                    <div class="list-group-item row">
-                                          <div class="form-floating col-sm-4">
-                                                <select id="barang" name="barang[]" multiple>
-                                                      <option value="">Pilih Barang</option>
-                                                      <?php
-                                                      include('../connection.php');
-
-                                                      try {
+                                    <div class="list-group-item row d-flex justify-content-center">
+                                          <div class="form-floating col-sm-6">
+                                                <div>
+                                                      <select id="barang" class="form-select" name="barang[]" aria-label="Default select example">
+                                                            <option selected">Pilih Barang</option>
+                                                            <?php
+                                                            include('../connection.php');
                                                             // Buat koneksi PDO
                                                             $connect->exec("USE proyek");
                                                             $query = "SELECT nama_barang FROM barang";
@@ -44,56 +48,77 @@
                                                             foreach ($data_barang as $barang) {
                                                                   echo '<option value="' . $barang['nama_barang'] . '">' . $barang['nama_barang'] . '</option>';
                                                             }
-                                                      } catch (PDOException $e) {
-                                                            // Menampilkan pesan kesalahan jika terjadi error
-                                                            echo "Error: " . $e->getMessage();
-                                                      }
-                                                      ?>
-                                                </select>
+
+                                                            ?>
+                                                      </select>
+                                                </div>
                                           </div>
-                                          <div class="col-sm-4">
-                                                <div class="input-group">
+                                          <div class="col-sm-6 d-flex align-items-center justify-content-between">
+                                                <div class="input-group me-4 ">
                                                       <input type="number" class="form-control" placeholder="Quantity" name="quantity[]" value="">
                                                 </div>
-                                                <div class="col-sm-2">
-                                                      <div class="input-group">
-                                                            <button onclick="addNewRow(event)" class="btn btn-primary">+</button>
-                                                      </div>
+                                                <div class="input-group ">
+                                                      <button onclick="addNewRow(event)" class="btn btn-primary">+</button>
                                                 </div>
                                           </div>
                                     </div>
-                              </ul>
                         </div>
+                        </ul>
                   </div>
+      </div>
 
-                  <div class="gap-2 mt-3 d-flex justify-content-center">
-                        <input class="btn btn-success" type="submit" value="Submit" name="submit">
-                        <a class="nav-link" href="index.php"><input class="btn btn-danger" type="reset" value="Back"></a>
-                  </div>
+      <div class="gap-2 mt-3 d-flex justify-content-center">
+            <input class="btn btn-success" type="submit" value="Submit" name="submit">
+            <a class="nav-link" href="index.php"><input class="btn btn-danger" type="reset" value="Back"></a>
+      </div>
 
-            </form>
+      </form>
       </div>
       <script>
+            // function addNewRow(event) {
+            //       event.preventDefault();
+
+            //       var container = document.querySelector(".list-group");
+
+            //       var newRow = document.createElement("div");
+            //       newRow.classList.add("list-group-item", "row", "d-flex");
+
+            //       var selectContainer = document.createElement("div");
+            //       selectContainer.classList.add("form-floating", "col-sm-6");
+
+            //       var select = document.createElement("select");
+            //       select.setAttribute("id", "barang");
+            //       select.classList.add("form-select")
+            //       select.setAttribute("name", "barang[]", "aria-label");
+            //       // select.setAttribute("multiple", "");
+
+            //       var option = document.createElement("option");
+            //       option.setAttribute("value", "");
+            //       option.innerText = "Pilih Barang";
+
+            //       select.appendChild(option);
             function addNewRow(event) {
                   event.preventDefault();
 
                   var container = document.querySelector(".list-group");
 
                   var newRow = document.createElement("div");
-                  newRow.classList.add("list-group-item", "row");
+                  newRow.classList.add("list-group-item", "row", "d-flex", "justify-content-center");
 
                   var selectContainer = document.createElement("div");
-                  selectContainer.classList.add("form-floating", "col");
+                  selectContainer.classList.add("form-floating", "col-sm-6");
 
                   var select = document.createElement("select");
+                  select.setAttribute("id", "barang");
+                  select.classList.add("form-select");
                   select.setAttribute("name", "barang[]");
-                  select.setAttribute("multiple", "");
 
                   var option = document.createElement("option");
                   option.setAttribute("value", "");
                   option.innerText = "Pilih Barang";
 
                   select.appendChild(option);
+
 
                   <?php
                   // Menampilkan data barang dalam dropdown
@@ -103,37 +128,60 @@
                         echo 'option.innerText = "' . $barang['nama_barang'] . '";';
                         echo 'select.appendChild(option);';
                   }
-                  ?>
 
+                  ?>
                   selectContainer.appendChild(select);
 
                   var quantityContainer = document.createElement("div");
-                  quantityContainer.classList.add("col");
+                  quantityContainer.classList.add("col-sm-6", "d-flex", "align-items-center", "justify-content-between");
+
+                  var inputGroup = document.createElement("div");
+                  inputGroup.classList.add("input-group", "me-4");
 
                   var input = document.createElement("input");
                   input.setAttribute("type", "number");
-                  input.setAttribute("class", "form-control");
+                  input.classList.add("form-control");
                   input.setAttribute("placeholder", "Quantity");
                   input.setAttribute("name", "quantity[]");
                   input.setAttribute("value", "");
 
-                  quantityContainer.appendChild(input);
+                  inputGroup.appendChild(input);
 
-                  var buttonContainer = document.createElement("div");
-                  buttonContainer.classList.add("col");
+                  var addButtonContainer = document.createElement("div");
+                  addButtonContainer.classList.add("input-group");
 
                   var addButton = document.createElement("button");
                   addButton.setAttribute("onclick", "addNewRow(event)");
                   addButton.classList.add("btn", "btn-primary");
                   addButton.innerText = "+";
 
-                  buttonContainer.appendChild(addButton);
+                  addButtonContainer.appendChild(addButton);
+
+                  quantityContainer.appendChild(inputGroup);
+                  quantityContainer.appendChild(addButtonContainer);
 
                   newRow.appendChild(selectContainer);
                   newRow.appendChild(quantityContainer);
-                  newRow.appendChild(buttonContainer);
 
                   container.appendChild(newRow);
+
+                  function adjustSelectWidth() {
+                        var selects = document.querySelectorAll('.select-barang');
+
+                        // Dapatkan lebar maksimum dari semua elemen select
+                        var maxWidth = 0;
+                        selects.forEach(function(select) {
+                              var width = select.offsetWidth;
+                              if (width > maxWidth) {
+                                    maxWidth = width;
+                              }
+                        });
+
+                        // Setel lebar maksimum untuk semua elemen select
+                        selects.forEach(function(select) {
+                              select.style.width = maxWidth + 'px';
+                        });
+                  }
             }
       </script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
@@ -143,7 +191,7 @@
 
 <?php
 include('../connection.php');
-
+$connect->exec("USE proyek");
 if (isset($_POST['submit'])) {
       $barang = $_POST["barang"];
       $quantity = $_POST["quantity"];
