@@ -261,31 +261,30 @@ if (isset($_POST['delete'])) {
                                                 }
                                           }
                                           ?>
+                                          <div class="row">
+                                                <div class="col-md-10">
+                                                      <nav aria-label="Page navigation">
+                                                            <ul class="pagination">
+                                                                  <li>
+                                                                        <a href="index.php?page=<?= $Previous; ?>" aria-label="Previous">
+                                                                              <span aria-hidden="true">&laquo; Previous</span>
+                                                                        </a>
+                                                                  </li>
+                                                                  <?php for ($i = 1; $i <= $pages; $i++) : ?>
+                                                                        <li><a href="index.php?page=<?= $i; ?>"><?= $i; ?></a></li>
+                                                                  <?php endfor; ?>
+                                                                  <li>
+                                                                        <a href="index.php?page=<?= $Next; ?>" aria-label="Next">
+                                                                              <span aria-hidden="true">Next &raquo;</span>
+                                                                        </a>
+                                                                  </li>
+                                                            </ul>
+                                                      </nav>
+                                                </div>
+                                          </div>
+
                                           </tbody>
                                     </table>
-                              </div>
-                              <div class="row">
-                                    <div class="row">
-                                          <div class="col-md-10">
-                                                <nav aria-label="Page navigation">
-                                                      <ul class="pagination">
-                                                            <li>
-                                                                  <a href="index.php?page=<?= $Previous; ?>" aria-label="Previous">
-                                                                        <span aria-hidden="true">&laquo; Previous</span>
-                                                                  </a>
-                                                            </li>
-                                                            <?php for ($i = 1; $i <= $pages; $i++) : ?>
-                                                                  <li><a href="index.php?page=<?= $i; ?>"><?= $i; ?></a></li>
-                                                            <?php endfor; ?>
-                                                            <li>
-                                                                  <a href="index.php?page=<?= $Next; ?>" aria-label="Next">
-                                                                        <span aria-hidden="true">Next &raquo;</span>
-                                                                  </a>
-                                                            </li>
-                                                      </ul>
-                                                </nav>
-                                          </div>
-                                    </div>
                               </div>
                   </div>
             </div>

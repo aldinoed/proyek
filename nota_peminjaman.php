@@ -7,53 +7,190 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Document</title>
       <link rel="stylesheet" href="bootstrap.min.css">
-      <style>
-            * {
-                  margin: 0;
-                  padding: 0;
-                  font-family: 'Viga'
-            }
-      </style>
 </head>
 
 <body>
       <div class="container">
-            <h1 class="d-flex justify-content-center">DATA PEMINJAMAN</h1>
-            <table class="table table-bordered border-primary">
-                  <thead>
-                        <tr>
-                              <th scope="col">NO.</th>
-                              <th scope="col">Nama Peminjam</th>
-                              <th scope="col">Barang yang Dipinjam</th>
-                              <th scope="col">Jumlah</th>
-                        </tr>
-                  </thead>
-                  <tbody>
-                        <?php
-                        include('connection.php');
-                        $connect->exec("USE proyek");
-                        $query = "SELECT u.nama_user, p.barang, p.quantity FROM user AS u JOIN peminjaman AS p";
-                        $result = $connect->query($query);
+            <form action="percobaan.php" method="POST">
+                  <h1 class="d-flex justify-content-center"><span class="badge bg-secondary">FORM</span>Peminjaman Barang Lab</h1>
+                  <div class="row">
+                        <div class="col">
+                              <ul class="list-group">
+                                    <div class="list-group-item row">
+                                          <div class="form-floating col">
+                                                <select id="barang" name="barang[]" multiple>
+                                                      <option value="">Pilih Barang</option>
+                                                      <?php
+                                                      include('connection.php');
 
-                        $nomor = 1;
+                                                      try {
+                                                            // Buat koneksi PDO
+                                                            $pdo = new PDO("mysql:host=localhost;dbname=proyek", "root", "");
 
-                        while ($row = $result->fetch()) {
-                              echo "<tr>";
-                              echo "<td>$nomor</td>";
-                              echo "<td>$row[nama_user]</td>";
-                              echo "<td>$row[barang]</td>";
-                              echo "<td>$row[quantity]</td>";
-                              echo "</tr>";
-                              $nomor++;
-                        }
-                        ?>
-                  </tbody>
-            </table>
-            <div class="gap-2 mt-3 d-flex justify-content-center">
-                  <a class="nav-link" href="index.php"><input class="btn btn-success " type="submit" value="Selesai" name="selesai"></a>
-            </div>
+                                                            // Set atribut PDO untuk menampilkan pesan kesalahan
+                                                            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+                                                            // Query untuk mendapatkan data barang dari tabel
+                                                            $query = "SELECT nama_barang FROM barang";
+                                                            $statement = $pdo->query($query);
+
+                                                            // Mengambil data barang dalam bentuk array
+                                                            $data_barang = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+                                                            // Menampilkan data barang dalam dropdown
+                                                            foreach ($data_barang as $barang) {
+                                                                  echo '<option value="' . $barang['nama_barang'] . '">' . $barang['nama_barang'] . '</option>';
+                                                            }
+                                                      } catch (PDOException $e) {
+                                                            // Menampilkan pesan kesalahan jika terjadi error
+                                                            echo "Error: " . $e->getMessage();
+                                                      }
+                                                      ?>
+                                                </select>
+                                          </div>
+                                          <div class="col">
+                                                <div class="input-group">
+                                                      <input type="number" class="form-control" placeholder="Quantity" name="quantity[]" value="">
+                                                      <button onclick="addNewRow(event)" class="btn btn-primary">+</button>
+                                                </div>
+                                          </div>
+                                          <div class="col">
+                                                <div class="input-group">
+                                                      <input type="text" class="form-control datepicker" placeholder="MM/DD/YYYY" name="date[]" value="">
+                                                </div>
+                                          </div>
+                                    </div>
+                              </ul>
+                        </div>
+                  </div>
+                  <div class="gap-2 mt-3 d-flex justify-content-center">
+                        <input class="btn btn-success" type="submit" value="Submit" name="submit">
+                        <a class="nav-link" href="index.php"><input class="btn btn-danger" type="reset" value="Back"></a>
+                  </div>
+
+            </form>
       </div>
+
+      <script>
+            $(document).ready(function() {
+                  $('.datepicker').datepicker({
+                        format: 'mm/dd/yyyy',
+                        todayHighlight: true,
+                        autoclose: true
+                  });
+            });
+
+            function addNewRow(event) {
+                  event.preventDefault();
+
+                  var container = document.querySelector(".list-group");
+
+                  var newRow = document.createElement("div");
+                  newRow.classList.add("list-group-item", "row");
+
+                  var selectContainer = document.createElement("div");
+                  selectContainer.classList.add("form-floating", "col");
+
+                  var select = document.createElement("select");
+                  select.setAttribute("name", "barang[]");
+                  select.setAttribute("multiple", "");
+
+                  var option = document.createElement("option");
+                  option.setAttribute("value", "");
+                  option.innerText = "Pilih Barang";
+
+                  select.appendChild(option);
+
+                  <?php
+                  // Menampilkan data barang dalam dropdown
+                  foreach ($data_barang as $barang) {
+                        echo 'var option = document.createElement("option");';
+                        echo 'option.setAttribute("value", "' . $barang['nama_barang'] . '");';
+                        echo 'option.innerText = "' . $barang['nama_barang'] . '";';
+                        echo 'select.appendChild(option);';
+                  }
+                  ?>
+
+                  selectContainer.appendChild(select);
+
+                  var quantityContainer = document.createElement("div");
+                  quantityContainer.classList.add("col");
+
+                  var input = document.createElement("input");
+                  input.setAttribute("type", "number");
+                  input.setAttribute("class", "form-control");
+                  input.setAttribute("placeholder", "Quantity");
+                  input.setAttribute("name", "quantity[]");
+                  input.setAttribute("value", "");
+
+                  quantityContainer.appendChild(input);
+
+                  var dateContainer = document.createElement("div");
+                  dateContainer.classList.add("col");
+
+                  var dateInput = document.createElement("input");
+                  dateInput.setAttribute("type", "text");
+                  dateInput.setAttribute("class", "form-control datepicker");
+                  dateInput.setAttribute("placeholder", "MM/DD/YYYY");
+                  dateInput.setAttribute("name", "date[]");
+
+                  dateContainer.appendChild(dateInput);
+
+                  var buttonContainer = document.createElement("div");
+                  buttonContainer.classList.add("col");
+
+                  var addButton = document.createElement("button");
+                  addButton.setAttribute("onclick", "addNewRow(event)");
+                  addButton.classList.add("btn", "btn-primary");
+                  addButton.innerText = "+";
+
+                  buttonContainer.appendChild(addButton);
+
+                  newRow.appendChild(selectContainer);
+                  newRow.appendChild(quantityContainer);
+                  newRow.appendChild(dateContainer);
+                  newRow.appendChild(buttonContainer);
+
+                  container.appendChild(newRow);
+            }
+      </script>
+      <script>
+            function redirectToNotaPeminjaman() {
+                  window.location.href = "nota_peminjaman.php";
+            }
+      </script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <?php
+      include('connection.php');
+
+      if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
+            $barang = $_POST["barang"];
+            $quantity = $_POST["quantity"];
+            $dates = $_POST["date"];
+
+            // Memastikan setidaknya satu barang dipilih
+            if (!empty($barang)) {
+                  // Memproses setiap pasangan barang, quantity, dan date
+                  for ($i = 0; $i < count($barang); $i++) {
+                        $barangItem = $barang[$i];
+                        $quantityItem = $quantity[$i];
+                        $dateItem = $dates[$i];
+
+                        // Simpan ke database atau lakukan tindakan lain sesuai kebutuhan
+                        $query = "INSERT INTO peminjaman (barang, quantity, tanggal_pengembalian) VALUES (?, ?, ?)";
+                        $statement = $pdo->prepare($query);
+                        $statement->bindParam(1, $barangItem);
+                        $statement->bindParam(2, $quantityItem);
+                        $statement->bindParam(3, $dateItem);
+                        $statement->execute();
+                  }
+
+                  echo '<script>redirectToNotaPeminjaman();</script>';
+            } else {
+                  echo "Pilih setidaknya satu barang.";
+            }
+      }
+      ?>
 </body>
 
 </html>

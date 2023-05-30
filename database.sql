@@ -58,8 +58,6 @@ CREATE TABLE IF NOT EXISTS user
 CREATE TABLE IF NOT EXISTS peminjaman(
   id_peminjaman VARCHAR(255) PRIMARY KEY,
   id_user VARCHAR(255) NOT NULL,
-  id_barang VARCHAR(255) NOT NULL,
-  quantity BIGINT NOT NULL,
   tanggal_pengembalian DATE NOT NULL,
   isReturn BOOLEAN NOT NULL
 );
@@ -73,3 +71,9 @@ ALTER TABLE peminjaman
 ADD CONSTRAINT bKey FOREIGN KEY (id_barang)
 REFERENCES barang (id_barang) ON UPDATE NO ACTION
 ON DELETE NO ACTION;
+
+CREATE TABLE detail_peminjaman(
+      id_peminjaman VARCHAR(255) NOT NULL,
+      id_user VARCHAR(255) NOT NULL,
+      id_barang VARCHAR(255) NOT NULL
+);
