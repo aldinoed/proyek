@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 ?>
 
 
@@ -199,6 +200,92 @@ session_start();
       <script src="js/bootstrap.bundle.min.js"></script>
       <script src="js/jquery-3.6.1.min.js"></script>
       <script src="js/index.js"></script>
+      <?php
+      include 'connection.php';
+      if (isset($_SESSION['user'])) {
+            $connect->exec("USE proyek");
+            $jmlStmnt = "SELECT nama_user FROM user WHERE username = :uname";
+            $stmnt = $connect->prepare($jmlStmnt);
+            $stmnt->bindParam(':uname', $_SESSION['user']);
+            $stmnt->execute();
+
+            $userId = $stmnt->fetchColumn();
+            $sql = "SELECT tanggal_pengembalian, barang, nama_user FROM detail_peminjaman WHERE nama_user = :userId";
+            $statement = $connect->prepare($sql);
+            $statement->bindParam(':userId', $userId);
+            $statement->execute();
+
+            $currentDate = date('Y-m-d');
+            $oneDayAway = date('Y-m-d', strtotime($currentDate . '+1 day'));
+
+            $returnDates = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            $delay = 1000;
+
+            foreach ($returnDates as $returnDate) {
+                  $tanggalPengembalian = $returnDate['tanggal_pengembalian'] ?? null;
+                  if ($tanggalPengembalian == $oneDayAway) {
+                        echo "<script>alert(\"Halo\")</script>";
+                        $namaStmnt = "SELECT nama_user FROM user WHERE nama_user = :userId";
+                        $namaStatement = $connect->prepare($namaStmnt);
+                        $namaStatement->bindParam(':userId', $returnDate['nama_user']);
+                        $namaStatement->execute();
+                        $namauser = $namaStatement->fetchColumn();
+                        $barangStmnt = "SELECT nama_barang FROM barang WHERE nama_barang = :barangId";
+                        $barangStatement = $connect->prepare($barangStmnt);
+                        $barangStatement->bindParam(':barangId', $returnDate['barang']);
+                        $barangStatement->execute();
+                        $namaBarang = $barangStatement->fetchColumn();
+
+                        echo "
+                <style>
+                  @keyframes slideUp {
+                        0% {
+                              opacity: 0;
+                              transform: translateY(100%);
+                        }
+                        100% {
+                              opacity: 1;
+                              transform: translateY(0);
+                        }
+                  }
+                  .toast.show {
+                        animation: slideUp 0.5s ease-in-out;
+                  }
+                  </style>
+                ";
+
+                        echo "
+                <script>
+                    setTimeout(function() {
+                        const toastElement = document.createElement('div');
+                        toastElement.classList.add('toast', 'show');
+                        toastElement.setAttribute('role', 'alert');
+                        toastElement.setAttribute('aria-live', 'assertive');
+                        toastElement.setAttribute('aria-atomic', 'true');
+                        toastElement.setAttribute('style', 'position: fixed; bottom: 20px; right: 20px; z-index: 9999;');
+                        toastElement.innerHTML = `
+                            <div class='toast-header'>
+                                <strong class='me-auto'>Notifications</strong>
+                                <button type='button' class='btn-close' data-bs-dismiss='toast' aria-label='Close'></button>
+                            </div>
+                            <div class='toast-body'>
+                              Hai $namauser!
+                              <br>
+                              Batas peminjaman $namaBarang akan berakhir besok.
+                            </div>
+                        `;
+                        document.body.appendChild(toastElement);
+                        const toastBootstrap = new bootstrap.Toast(toastElement);
+                        toastBootstrap.show();
+                    }, $delay);
+                </script>
+                ";
+                        $delay += 4000;
+                  }
+            }
+      }
+      ?>
 </body>
 
 </html>

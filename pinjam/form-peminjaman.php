@@ -27,7 +27,7 @@
 <body>
       <div class="container">
             <h1 class="d-flex justify-content-center  mt-4 mb-3">Form Peminjaman Barang Lab</h1>
-            <florm method="POST">
+            <form method="POST">
                   <div class=" mt-5 row ms-auto me-auto overflow-auto" style="width:90%;">
                         <div class="col ">
                               <ul class="list-group overflow-scroll border" style="max-height: 55vh;">
@@ -49,7 +49,6 @@
                                                             foreach ($data_barang as $barang) {
                                                                   echo '<option value="' . $barang['nama_barang'] . '">' . $barang['nama_barang'] . '</option>';
                                                             }
-
                                                             ?>
                                                       </select>
                                                 </div>
@@ -69,7 +68,7 @@
                                     <input type="text" class="form-control datepicker" placeholder="MM/DD/YYYY" name="date" value="">
                               </div>
                               <div class="gap-2 mt-3 d-flex justify-content-center">
-                                    <button class="btn btn-primary shadow" type="submit" formaction="form-peminjaman.php">Submit</button>
+                                    <button name="submit" class="btn btn-primary shadow" type="submit" formaction="form-peminjaman.php">Submit</button>
                                     <input class="btn btn-danger shadow" type="reset" value=" Reset ">
                                     <input type="button" class="btn btn-secondary shadow" name="kembali" value=" Back ">
                               </div>
@@ -86,38 +85,15 @@
       <script>
             $(document).ready(function() {
                   $('.datepicker').datepicker({
-                        format: 'mm/dd/yyyy',
+                        format: 'yyyy/mm/dd',
                         todayHighlight: true,
                         autoclose: true,
                         orientation: 'bottom'
                   });
             });
-            // function addNewRow(event) {
-            //       event.preventDefault();
-
-            //       var container = document.querySelector(".list-group");
-
-            //       var newRow = document.createElement("div");
-            //       newRow.classList.add("list-group-item", "row", "d-flex");
-
-            //       var selectContainer = document.createElement("div");
-            //       selectContainer.classList.add("form-floating", "col-sm-6");
-
-            //       var select = document.createElement("select");
-            //       select.setAttribute("id", "barang");
-            //       select.classList.add("form-select")
-            //       select.setAttribute("name", "barang[]", "aria-label");
-            //       // select.setAttribute("multiple", "");
-
-            //       var option = document.createElement("option");
-            //       option.setAttribute("value", "");
-            //       option.innerText = "Pilih Barang";
-
-            //       select.appendChild(option);
-            $(function() {
-                  $('#datepicker').datepicker();
-            });
-
+            // $(function() {
+            //       $('#datepicker').datepicker();
+            // });
 
             function addNewRow(event) {
                   event.preventDefault();
@@ -140,7 +116,6 @@
                   option.innerText = "Pilih Barang";
 
                   select.appendChild(option);
-
 
                   <?php
                   // Menampilkan data barang dalam dropdown
@@ -212,27 +187,37 @@
 
 <?php
 include('../connection.php');
+require '../deffunc.php';
 $connect->exec("USE proyek");
 if (isset($_POST['submit'])) {
       $barang = $_POST["barang"];
       $quantity = $_POST["quantity"];
-      $idPinjam = md5(uniqid($_SESSION['user'], true));
-      // Memastikan setidaknya satu barang dipilih
+      $idPinjam = cekUuid();
+      $namaUser = $_SESSION['user'];
+      $date = date("Y-m-d");
+      $returnDate = $_POST['date'];
+
       if (!empty($barang)) {
             // Memproses setiap pasangan barang dan quantity
             for ($i = 0; $i < count($barang); $i++) {
                   $barangItem = $barang[$i];
                   $quantityItem = $quantity[$i];
-                  $date = date("Y - m - d", time());
-                  // Simpan ke database atau lakukan tindakan lain sesuai kebutuhan
-                  $query = "INSERT INTO detail_peminjaman (barang, quantity) VALUES (?, ?)";
+                  $query = "INSERT INTO detail_peminjaman (id_peminjaman, nama_user, barang, quantity, tanggal_pengembalian) VALUES ('$idPinjam', '$namaUser','$barangItem', '$quantityItem', '$returnDate')";
                   $statement = $connect->prepare($query);
-                  $statement->bindParam(1, $barangItem);
-                  $statement->bindParam(2, $quantityItem);
                   $statement->execute();
+                  // $query = "INSERT INTO peminjaman (id_peminjaman,barang, quantity) VALUES ('$idPinjam', '$barangItem', '$quantityItem')";
+                  // $statement = $connect->prepare($query);
+                  // $statement->execute();
+                  $jmlStmnt = "SELECT jumlah FROM barang WHERE nama_barang = :barang";
+                  $stmnt = $connect->prepare($jmlStmnt);
+                  $stmnt->bindParam(':barang', $barangItem);
+                  $stmnt->execute();
+                  $jumlahAll = $stmnt->fetchColumn();
+                  $jumlahAll -= $quantityItem;
+                  $query = "UPDATE barang SET jumlah = $jumlahAll WHERE nama_barang = '$barangItem'";
+                  $statement = $connect->query($query);
             }
-
-            echo "Data berhasil disimpan.";
+            echo "<script>alert(\"Data Berhasil Disimpan\")</script>";
       } else {
             echo "<script>alert(\"Anda belum memilih satu barang \")</script>";
       }

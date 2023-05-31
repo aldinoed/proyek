@@ -247,7 +247,7 @@ if (isset($_POST['finish'])) {
                                           <?php
                                           include '../connection.php';
                                           $connect->exec("USE proyek");
-                                          $query = "SELECT * FROM peminjaman";
+                                          $query = "SELECT * FROM detail_peminjaman";
                                           $statement = $connect->prepare($query);
                                           $statement->execute();
                                           $jobs = $statement->fetchAll();
@@ -256,7 +256,7 @@ if (isset($_POST['finish'])) {
                                                 <tr>
                                                       <td><?php echo $i; ?></td>
                                                       <td><?php echo $job['id_peminjaman']; ?></td>
-                                                      <td><?php echo $job['id_user']; ?></td>
+                                                      <td><?php echo $job['nama_user']; ?></td>
                                                       <td><?php echo $job['id_barang']; ?></td>
                                                       <td><?php echo $job['quantity']; ?></td>
                                                       <td class="ps-5"><?php echo $job['tanggal_pengembalian']; ?></td>
