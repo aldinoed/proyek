@@ -61,7 +61,8 @@ if (isset($_SESSION['user'])) {
                                           <label class="form-check-label" for="exampleCheck1">Remember me</label>
                                     </div>
                                     <button type="submit" class="btn btn-primary tombol" name="login" formaction="index.php">Login</button>
-                                    <button type="reset" class="btn btn-danger tombol" style="margin-left:10px;">Clear</button>
+                                    <button type="reset" class="btn btn-danger tombol" style="margin-left:10px;"> &#160;Clear &#160;</button>
+                                    <button type="" class="btn btn-secondary tombol" style="margin-left:10px;"><a href="../" class="text-white" style="text-decoration:none">&#160; Back &#160;</a></button>
                               </form>
                         </div>
                   </div>
@@ -73,9 +74,9 @@ if (isset($_SESSION['user'])) {
       include '../connection.php';
       if (isset($_POST['login'])) {
             try {
+                  $cookieAct;
                   $username = $_POST['username'];
                   $passwd = $_POST['password'];
-                  $cookieAct = $_POST['remember'];
                   $connect->exec("USE proyek");
                   $query = "SELECT * FROM user WHERE username = :username AND password = :passwd";
                   $statement = $connect->prepare($query);
@@ -98,6 +99,9 @@ if (isset($_SESSION['user'])) {
                         $role = $stmnt->fetchColumn();
                         $_SESSION['role'] = $role;
 
+                        if (isset($_POST['remember'])) {
+                              $cookieAct = $_POST['remember'];
+                        }
                         if ($cookieAct === "yes") {
                               setcookie('user', $username, time() + 900,  '/');
                         }

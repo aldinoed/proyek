@@ -191,10 +191,10 @@ if (isset($_POST['finish'])) {
                                           </span><a class="text-white align-items-center" href="#">&#160;&#160;Data Peminjaman</a></div>
                                     <div class="btn fitur d-flex justify-content-center align-items-center"><span class="text-white  material-symbols-outlined">
                                                 home_repair_service
-                                          </span><a class="text-white align-items-center" href="invman/index.php">&#160;&#160;Manajemen Peralatan</a></div>
+                                          </span><a class="text-white align-items-center" href="../invman/">&#160;&#160;Manajemen Peralatan</a></div>
                                     <div class="btn fitur d-flex justify-content-center align-items-center">&#160;&#160;<span class="text-white  material-symbols-outlined">
                                                 manage_accounts
-                                          </span><a class="text-white align-items-center" href="">&#160;&#160;Manajemen Pengguna</a></div>
+                                          </span><a class="text-white align-items-center" href="../userman/">&#160;&#160;Manajemen Pengguna</a></div>
                                     <form method="post" class="d-flex justify-content-center fitur" style="padding-right: 100px">
                                           <button name="logout" type="submit" formaction="../logout.php" class=" btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;">
                                                 <span class="material-symbols-outlined">
@@ -236,9 +236,7 @@ if (isset($_POST['finish'])) {
 
                                                 <th scope="col">No.</th>
                                                 <th scope="col">Id Peminjaman</th>
-                                                <th scope="col">Id User</th>
-                                                <th scope="col">Id Barang</th>
-                                                <th scope="col">Jumlah</th>
+                                                <th scope="col">Nama Peminjam</th>
                                                 <th scope="col">Tanggal Pengembalian</th>
                                                 <th scope="col" class="ps-5">Action</th>
                                     </tr>
@@ -247,7 +245,7 @@ if (isset($_POST['finish'])) {
                                           <?php
                                           include '../connection.php';
                                           $connect->exec("USE proyek");
-                                          $query = "SELECT * FROM detail_peminjaman";
+                                          $query = "SELECT DISTINCT * FROM detail_peminjaman";
                                           $statement = $connect->prepare($query);
                                           $statement->execute();
                                           $jobs = $statement->fetchAll();
@@ -257,13 +255,11 @@ if (isset($_POST['finish'])) {
                                                       <td><?php echo $i; ?></td>
                                                       <td><?php echo $job['id_peminjaman']; ?></td>
                                                       <td><?php echo $job['nama_user']; ?></td>
-                                                      <td><?php echo $job['id_barang']; ?></td>
-                                                      <td><?php echo $job['quantity']; ?></td>
-                                                      <td class="ps-5"><?php echo $job['tanggal_pengembalian']; ?></td>
+                                                      <td><?php echo $job['tanggal_pengembalian']; ?></td>
                                                       <td class="d-flex justify-content-start">
                                                             <form method="POST" action="../peminjaman/">
-                                                                  <input type="text" name="idbarang" value="<?= $job['id_barang'] ?>" style="display: none;">
-                                                                  <input type="text" name="quantity" value="<?= $job['quantity'] ?>" style="display: none;">
+                                                                  <input type="text" name="idbarang" value="<?= $job['barang'] ?>" style="display: none"">
+                                                                  <input type=" text" name="quantity" value="<?= $job['quantity'] ?>" style="display: none;">
                                                                   <button type="submit" class="btn btn-primary d-flex align-items-center" style="font-size: 14px;" name="finish" value="<?= $job['id_peminjaman']; ?>"><span class="material-symbols-outlined">
                                                                               task_alt
                                                                         </span>&#160; Dikembalikan</button>

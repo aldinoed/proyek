@@ -6,7 +6,7 @@
       <meta charset="UTF-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Document</title>
+      <title>Form Peminjaman</title>
       <link rel="stylesheet" href="../css/bootstrap.min.css">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
       <style>
@@ -27,10 +27,10 @@
 <body>
       <div class="container">
             <h1 class="d-flex justify-content-center  mt-4 mb-3">Form Peminjaman Barang Lab</h1>
-            <form method="POST">
+            <form method="POST" class="shadow rounded pt-1 pb-3 " style="max-height: 80vh">
                   <div class=" mt-5 row ms-auto me-auto overflow-auto" style="width:90%;">
                         <div class="col ">
-                              <ul class="list-group overflow-scroll border" style="max-height: 55vh;">
+                              <ul class="list-group overflow-scroll border" style="max-height: 50vh;">
                                     <div class="list-group-item row d-flex justify-content-center">
                                           <div class="form-floating col-sm-6">
                                                 <div>
@@ -65,12 +65,12 @@
                         </div>
                         <div class="row mt-3">
                               <div class="input-group">
-                                    <input type="text" class="form-control datepicker" placeholder="MM/DD/YYYY" name="date" value="">
+                                    <input type="text" class="form-control datepicker" placeholder="YYYY/MM/DD" name="date" value="">
                               </div>
                               <div class="gap-2 mt-3 d-flex justify-content-center">
                                     <button name="submit" class="btn btn-primary shadow" type="submit" formaction="form-peminjaman.php">Submit</button>
-                                    <input class="btn btn-danger shadow" type="reset" value=" Reset ">
-                                    <input type="button" class="btn btn-secondary shadow" name="kembali" value=" Back ">
+                                    <button class="btn btn-danger shadow" type="reset"> <a href="../pinjam/form-peminjaman.php" class="text-white text-decoration-none">Clear</a> </button>
+                                    <button type="button" class="btn btn-secondary shadow " name="kembali"> <a href="../pinjam/" class="text-white text-decoration-none">&#160;Back&#160; </a> </button>
                               </div>
                         </div>
                   </div>
@@ -106,9 +106,13 @@
                   var selectContainer = document.createElement("div");
                   selectContainer.classList.add("form-floating", "col-sm-6");
 
+                  var divBeforeSelect = document.createElement("div");
+
                   var select = document.createElement("select");
                   select.setAttribute("id", "barang");
-                  select.classList.add("form-select");
+                  select.classList.add("form-select", );
+                  select.style.paddingTop = '0px'
+                  select.style.paddingBottom = '0px'
                   select.setAttribute("name", "barang[]");
 
                   var option = document.createElement("option");
@@ -131,6 +135,8 @@
 
                   var quantityContainer = document.createElement("div");
                   quantityContainer.classList.add("col-sm-6", "d-flex", "align-items-center", "justify-content-between");
+                  quantityContainer.style.paddingTop = '0px'
+                  quantityContainer.style.paddingBottom = '0px'
 
                   var inputGroup = document.createElement("div");
                   inputGroup.classList.add("input-group", "me-4");
@@ -146,6 +152,7 @@
 
                   var addButtonContainer = document.createElement("div");
                   addButtonContainer.classList.add("input-group");
+                  addButtonContainer.style.maxWidth = '40px'
 
                   var addButton = document.createElement("button");
                   addButton.setAttribute("onclick", "addNewRow(event)");
@@ -202,7 +209,7 @@ if (isset($_POST['submit'])) {
             for ($i = 0; $i < count($barang); $i++) {
                   $barangItem = $barang[$i];
                   $quantityItem = $quantity[$i];
-                  $query = "INSERT INTO detail_peminjaman (id_peminjaman, nama_user, barang, quantity, tanggal_pengembalian) VALUES ('$idPinjam', '$namaUser','$barangItem', '$quantityItem', '$returnDate')";
+                  $query = "INSERT INTO detail_peminjaman (id_peminjaman, nama_user, barang, quantity, tanggal_pengembalian, status) VALUES ('$idPinjam', '$namaUser','$barangItem', '$quantityItem', '$returnDate', 'Waiting')";
                   $statement = $connect->prepare($query);
                   $statement->execute();
                   // $query = "INSERT INTO peminjaman (id_peminjaman,barang, quantity) VALUES ('$idPinjam', '$barangItem', '$quantityItem')";
@@ -214,7 +221,7 @@ if (isset($_POST['submit'])) {
                   $stmnt->execute();
                   $jumlahAll = $stmnt->fetchColumn();
                   $jumlahAll -= $quantityItem;
-                  $query = "UPDATE barang SET jumlah = $jumlahAll WHERE nama_barang = '$barangItem'";
+                  $query = "UPDATE barang SET Tersedia = $jumlahAll WHERE nama_barang = '$barangItem'";
                   $statement = $connect->query($query);
             }
             echo "<script>alert(\"Data Berhasil Disimpan\")</script>";

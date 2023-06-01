@@ -120,13 +120,13 @@ session_start();
                                     </span><a class="text-white align-items-center" href="">&#160;&#160;Beranda</a></div>
                               <?php
                               if (isset($_SESSION['role'])) {
-                                    if ($_SESSION['role'] === 'admin') { ?>
+                                    if ($_SESSION['role'] === 'Admin') { ?>
                                           <div class="btn fitur d-flex justify-content-center align-items-center" style="padding-right: 40px"><span class="text-white  material-symbols-outlined">
                                                       edit_note
                                                 </span><a class="text-white align-items-center" href="peminjaman/">&#160;&#160;Data Peminjaman</a></div>
                                           <div class="btn fitur d-flex justify-content-center align-items-center"><span class="text-white  material-symbols-outlined">
                                                       home_repair_service
-                                                </span><a class="text-white align-items-center" href="invman/index.php">&#160;&#160;Manajemen Peralatan</a></div>
+                                                </span><a class="text-white align-items-center" href="invman/">&#160;&#160;Manajemen Peralatan</a></div>
                                           <div class="btn fitur d-flex justify-content-center align-items-center">&#160;&#160;<span class="text-white  material-symbols-outlined">
                                                       manage_accounts
                                                 </span><a class="text-white align-items-center" href="userman/">&#160;&#160;Manajemen Pengguna</a></div>
@@ -137,7 +137,7 @@ session_start();
                                                       </span>&#160;&#160;Logout
                                                 </button>
                                           </form>
-                                    <?php } else if ($_SESSION['role'] === 'mahasiswa' || $_SESSION['role'] === 'dosen') { ?>
+                                    <?php } else if ($_SESSION['role'] === 'Mahasiswa' || $_SESSION['role'] === 'Dosen') { ?>
                                           <div class="btn fitur d-flex justify-content-center align-items-center " style="padding-right:60px"><span class="material-symbols-outlined text-white">
                                                       home_repair_service
                                                 </span><a class="text-white align-items-center" href="pinjam/">&#160;&#160;Pinjam Barang</a>

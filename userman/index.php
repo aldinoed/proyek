@@ -1,47 +1,10 @@
 <?php
 session_start();
 include '../connection.php';
-if ($_SESSION['role'] !== 'admin') {
+if (!(isset($_SESSION['user'])) || $_SESSION['role'] != 'Admin') {
       header('location: http://localhost:8080/wpw/proyek');
 }
 $connect->exec("USE proyek");
-// $limit = isset($_POST["limit-records"]) ? $_POST["limit-records"] : 5000;
-// $page = isset($_GET['page']) ? $_GET['page'] : 1;
-// $start = ($page - 1) * $limit;
-// $result = $connect->query("SELECT * FROM user LIMIT $start, $limit");
-// $users = $result->fetchAll(PDO::FETCH_ASSOC);
-
-// $result1 = $connect->query("SELECT count(id_user) AS id FROM user");
-// $custCount = $result1->fetchAll(PDO::FETCH_ASSOC);
-// $total = $custCount['id'];
-// $pages = ceil($total / $limit);
-
-// $Previous = $page - 1;
-// $Next = $page + 1;
-$limit = isset($_GET["limit-records"]) ? $_GET["limit-records"] : 5000;
-$page = isset($_GET['page']) ? $_GET['page'] : 1;
-$start = ($page - 1) * $limit;
-
-$query = "SELECT * FROM user LIMIT :start, :limit";
-$statement = $connect->prepare($query);
-$statement->bindParam(':start', $start, PDO::PARAM_INT);
-$statement->bindParam(':limit', $limit, PDO::PARAM_INT);
-$statement->execute();
-$users = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-$queryCount = "SELECT count(id_user) AS id FROM user";
-$result = $connect->query($queryCount);
-$custCount = $result->fetch(PDO::FETCH_ASSOC);
-$total = $custCount['id'];
-$pages = ceil($total / $limit);
-
-$Previous = $page - 1;
-$Next = $page + 1;
-
-if (!(isset($_SESSION['user']))) {
-      header('location: http://localhost:8080/wpw/proyek');
-}
-
 if (isset($_POST['delete'])) {
       try {
             $selectedNRP = $_POST['selectedNrp'];
@@ -180,10 +143,10 @@ if (isset($_POST['delete'])) {
                                           </span><a class="text-white align-items-center" href="../peminjaman/">&#160;&#160;Data Peminjaman</a></div>
                                     <div class="btn fitur d-flex justify-content-center align-items-center"><span class="text-white  material-symbols-outlined">
                                                 home_repair_service
-                                          </span><a class="text-white align-items-center" href="invman/index.php">&#160;&#160;Manajemen Peralatan</a></div>
+                                          </span><a class="text-white align-items-center" href="../invman/">&#160;&#160;Manajemen Peralatan</a></div>
                                     <div class="btn fitur d-flex justify-content-center align-items-center">&#160;&#160;<span class="text-white  material-symbols-outlined">
                                                 manage_accounts
-                                          </span><a class="text-white align-items-center" href="">&#160;&#160;Manajemen Pengguna</a></div>
+                                          </span><a class="text-white align-items-center" href="../userman/">&#160;&#160;Manajemen Pengguna</a></div>
                                     <form method="post" class="d-flex justify-content-center fitur" style="padding-right: 100px">
                                           <button name="logout" type="submit" formaction="../logout.php" class=" btn text-white d-flex align-items-center justify-content-center" style="border-radius:0px; height:50px;width: 100%;">
                                                 <span class="material-symbols-outlined">
@@ -209,27 +172,16 @@ if (isset($_POST['delete'])) {
                                           <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
                                     </svg><a href="input-pengguna.php" class="text-white">Tambah</a>
                               </button>
-                              <form method="post" action="#">
-                                    <select name="limit-records" id="limit-records">
-                                          <option disabled="disabled" selected="selected">Show</option>
-                                          <?php foreach ([10, 100, 500, 1000, 5000] as $limit) : ?>
-                                                <option <?php if (isset($_GET["limit-records"]) && $_GET["limit-records"] == $limit) echo "selected" ?> value="<?= $limit; ?>"><?= $limit; ?></option>
-                                          <?php endforeach; ?>
-                                    </select>
-                              </form>
                         </div>
-                        <div class="table-view overflow-auto" style="height:80%;">
+                        <div class="table-view overflow-auto" style="height:83%;">
                               <table class="table table-striped ">
-                                    <tr>
-                                          <thead>
-
-                                                <th scope="col">No.</th>
-                                                <th scope="col">Nama</th>
-                                                <th scope="col">NRP</th>
-                                                <th scope="col">Telepon</th>
-                                                <th scope="col">Role</th>
-                                                <th scope="col" class="ms-5">Action</th>
-                                    </tr>
+                                    <thead>
+                                          <th scope="col">No.</th>
+                                          <th scope="col">Nama</th>
+                                          <th scope="col">NRP</th>
+                                          <th scope="col">Telepon</th>
+                                          <th scope="col">Role</th>
+                                          <th scope="col" class="ms-5">Action</th>
                                     </thead>
                                     <tbody>
                                           <?php
@@ -269,29 +221,6 @@ if (isset($_POST['delete'])) {
                                           } ?>
                                     </tbody>
                               </table>
-                        </div>
-                        <div class="row">
-                              <div class="row">
-                                    <div class="col-md-10">
-                                          <nav aria-label="Page navigation">
-                                                <ul class="pagination">
-                                                      <li>
-                                                            <a href="index.php?page=<?= $Previous; ?>" aria-label="Previous">
-                                                                  <span aria-hidden="true">&laquo; Previous</span>
-                                                            </a>
-                                                      </li>
-                                                      <?php for ($i = 1; $i <= $pages; $i++) : ?>
-                                                            <li><a href="index.php?page=<?= $i; ?>"><?= $i; ?></a></li>
-                                                      <?php endfor; ?>
-                                                      <li>
-                                                            <a href="index.php?page=<?= $Next; ?>" aria-label="Next">
-                                                                  <span aria-hidden="true">Next &raquo;</span>
-                                                            </a>
-                                                      </li>
-                                                </ul>
-                                          </nav>
-                                    </div>
-                              </div>
                         </div>
                   </div>
             </div>

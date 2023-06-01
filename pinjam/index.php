@@ -1,44 +1,12 @@
 <?php
 session_start();
 include '../connection.php';
-$connect->exec("USE proyek");
-// $limit = isset($_POST["limit-records"]) ? $_POST["limit-records"] : 5000;
-// $page = isset($_GET['page']) ? $_GET['page'] : 1;
-// $start = ($page - 1) * $limit;
-// $result = $connect->query("SELECT * FROM user LIMIT $start, $limit");
-// $users = $result->fetchAll(PDO::FETCH_ASSOC);
 
-// $result1 = $connect->query("SELECT count(id_user) AS id FROM user");
-// $custCount = $result1->fetchAll(PDO::FETCH_ASSOC);
-// $total = $custCount['id'];
-// $pages = ceil($total / $limit);
-
-// $Previous = $page - 1;
-// $Next = $page + 1;
-$limit = isset($_GET["limit-records"]) ? $_GET["limit-records"] : 5000;
-$page = isset($_GET['page']) ? $_GET['page'] : 1;
-$start = ($page - 1) * $limit;
-
-$query = "SELECT * FROM user LIMIT :start, :limit";
-$statement = $connect->prepare($query);
-$statement->bindParam(':start', $start, PDO::PARAM_INT);
-$statement->bindParam(':limit', $limit, PDO::PARAM_INT);
-$statement->execute();
-$users = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-$queryCount = "SELECT count(id_user) AS id FROM user";
-$result = $connect->query($queryCount);
-$custCount = $result->fetch(PDO::FETCH_ASSOC);
-$total = $custCount['id'];
-$pages = ceil($total / $limit);
-
-$Previous = $page - 1;
-$Next = $page + 1;
-
-if (!(isset($_SESSION['user']))) {
+if (!(isset($_SESSION['user'])) || $_SESSION['role'] == 'Amin') {
       header('location: http://localhost:8080/wpw/proyek');
 }
 
+$connect->exec("USE proyek");
 if (isset($_POST['delete'])) {
       try {
             $selectedNRP = $_POST['selectedNrp'];
@@ -171,7 +139,7 @@ if (isset($_POST['delete'])) {
                                           home
                                     </span><a class="text-white align-items-center" href="">&#160;&#160;Beranda</a></div>
                               <?php
-                              if ($_SESSION['role'] === 'mahasiswa' || $_SESSION['role'] === 'dosen') { ?>
+                              if ($_SESSION['role'] === 'Mahasiswa' || $_SESSION['role'] === 'Dosen') { ?>
                                     <div class="btn fitur d-flex justify-content-center align-items-center " style="padding-right:60px"><span class="material-symbols-outlined text-white">
                                                 home_repair_service
                                           </span><a class="text-white align-items-center" href="pinjam/">&#160;&#160;Pinjam Barang</a>
@@ -188,20 +156,12 @@ if (isset($_POST['delete'])) {
                         </div>
                   </div>
                   <!-- table section -->
-                  <div class="col-9  ms-auto me-auto bg-white rounded-2 pt-3 " style="max-height:80vh; margin-top: 30px;">
+                  <div class="col-9  ms-auto me-auto bg-white rounded-2 pt-3 " style="max-height:76vh; margin-top: 40px;">
                         <div class="d-flex align-items-center  justify-content-between ps-1 pe-4 mb-2">
                               <button class="btn-primary btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                                           <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
                                     </svg><a href="form-peminjaman.php" class="text-white">Pinjam</a>
                               </button>
-                              <form method="post" action="#">
-                                    <select name="limit-records" id="limit-records">
-                                          <option disabled="disabled" selected="selected">Show</option>
-                                          <?php foreach ([10, 100, 500, 1000, 5000] as $limit) : ?>
-                                                <option <?php if (isset($_GET["limit-records"]) && $_GET["limit-records"] == $limit) echo "selected" ?> value="<?= $limit; ?>"><?= $limit; ?></option>
-                                          <?php endforeach; ?>
-                                    </select>
-                              </form>
                         </div>
                         <?php
                         include '../connection.php';
@@ -226,6 +186,7 @@ if (isset($_POST['delete'])) {
                                                       <th scope="col">Barang</th>
                                                       <th scope="col">Jumlah</th>
                                                       <th scope="col">Tanggal Pengembalian</th>
+                                                      <th scope="col">Status</th>
                                           </tr>
                                           </thead>
                                           <tbody>
@@ -244,28 +205,6 @@ if (isset($_POST['delete'])) {
                                                 }
                                           }
                                           ?>
-                                          <div class="row">
-                                                <div class="col-md-10">
-                                                      <nav aria-label="Page navigation">
-                                                            <ul class="pagination">
-                                                                  <li>
-                                                                        <a href="index.php?page=<?= $Previous; ?>" aria-label="Previous">
-                                                                              <span aria-hidden="true">&laquo; Previous</span>
-                                                                        </a>
-                                                                  </li>
-                                                                  <?php for ($i = 1; $i <= $pages; $i++) : ?>
-                                                                        <li><a href="index.php?page=<?= $i; ?>"><?= $i; ?></a></li>
-                                                                  <?php endfor; ?>
-                                                                  <li>
-                                                                        <a href="index.php?page=<?= $Next; ?>" aria-label="Next">
-                                                                              <span aria-hidden="true">Next &raquo;</span>
-                                                                        </a>
-                                                                  </li>
-                                                            </ul>
-                                                      </nav>
-                                                </div>
-                                          </div>
-
                                           </tbody>
                                     </table>
                               </div>
