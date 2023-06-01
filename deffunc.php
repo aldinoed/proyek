@@ -1,18 +1,14 @@
 <?php
-function cekSession($session, $role)
-{
-      echo "hello world";
-}
-
 function cekUuid()
 {
       include 'connection.php';
       $connect->exec("USE proyek");
-      $query = "SELECT id_peminjaman FROM peminjaman";
+      $query = "SELECT id_peminjaman FROM detail_peminjaman";
       $statement = $connect->query($query);
       $id = rand();
+      $i = 0;
       while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $data = $row['id_peminjaman'];
+            $data = $row[$i]['id_peminjaman'];
 
             if ($data == $id) {
                   $id = rand();

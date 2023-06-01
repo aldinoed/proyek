@@ -212,17 +212,6 @@ if (isset($_POST['submit'])) {
                   $query = "INSERT INTO detail_peminjaman (id_peminjaman, nama_user, barang, quantity, tanggal_pengembalian, status) VALUES ('$idPinjam', '$namaUser','$barangItem', '$quantityItem', '$returnDate', 'Waiting')";
                   $statement = $connect->prepare($query);
                   $statement->execute();
-                  // $query = "INSERT INTO peminjaman (id_peminjaman,barang, quantity) VALUES ('$idPinjam', '$barangItem', '$quantityItem')";
-                  // $statement = $connect->prepare($query);
-                  // $statement->execute();
-                  $jmlStmnt = "SELECT jumlah FROM barang WHERE nama_barang = :barang";
-                  $stmnt = $connect->prepare($jmlStmnt);
-                  $stmnt->bindParam(':barang', $barangItem);
-                  $stmnt->execute();
-                  $jumlahAll = $stmnt->fetchColumn();
-                  $jumlahAll -= $quantityItem;
-                  $query = "UPDATE barang SET Tersedia = $jumlahAll WHERE nama_barang = '$barangItem'";
-                  $statement = $connect->query($query);
             }
             echo "<script>alert(\"Data Berhasil Disimpan!\")</script>";
             echo "<script>setTimeout(function() {

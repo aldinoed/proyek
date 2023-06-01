@@ -200,11 +200,16 @@ if (isset($_POST['delete'])) {
                                                             <td><?= $user['barang']; ?></td>
                                                             <td><?= $user['quantity']; ?></td>
                                                             <td><?= $user['tanggal_pengembalian']; ?></td>
-                                                            <td><?php if ($user['status'] == 'Waiting') { ?>
-                                                                        <div class="btn bg-warning" style="cursor:auto;">
+                                                            <td>
+                                                                  <?php if ($user['status'] == 'Waiting') { ?>
+                                                                        <div class="btn bg-warning text-white" style="cursor:auto;">
                                                                               Waiting
                                                                         </div>
-                                                                  <?php } ?>
+                                                                  <?php } else if ($user['status'] == 'Approved') { ?>
+                                                                        <div class="btn bg-success text-white" style="cursor:auto;">
+                                                                              Approved
+                                                                        </div>
+                                                                  <?php  } ?>
                                                             </td>
                                                       </tr>
                                           <?php $i++;

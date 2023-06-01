@@ -1,45 +1,42 @@
 <?php
 session_start();
 include '../connection.php';
-if ($_SESSION['role'] !== 'admin') {
+if ($_SESSION['role'] !== 'Admin' || !(isset($_SESSION['user']))) {
       header('location: http://localhost:8080/wpw/proyek');
 }
 $connect->exec("USE proyek");
-// $limit = isset($_POST["limit-records"]) ? $_POST["limit-records"] : 5000;
-// $page = isset($_GET['page']) ? $_GET['page'] : 1;
-// $start = ($page - 1) * $limit;
-// $result = $connect->query("SELECT * FROM user LIMIT $start, $limit");
-// $users = $result->fetchAll(PDO::FETCH_ASSOC);
-
-// $result1 = $connect->query("SELECT count(id_user) AS id FROM user");
-// $custCount = $result1->fetchAll(PDO::FETCH_ASSOC);
-// $total = $custCount['id'];
-// $pages = ceil($total / $limit);
-
-// $Previous = $page - 1;
-// $Next = $page + 1;
-$limit = isset($_GET["limit-records"]) ? $_GET["limit-records"] : 5000;
-$page = isset($_GET['page']) ? $_GET['page'] : 1;
-$start = ($page - 1) * $limit;
-
-$query = "SELECT * FROM user LIMIT :start, :limit";
-$statement = $connect->prepare($query);
-$statement->bindParam(':start', $start, PDO::PARAM_INT);
-$statement->bindParam(':limit', $limit, PDO::PARAM_INT);
-$statement->execute();
-$users = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-$queryCount = "SELECT count(id_user) AS id FROM user";
-$result = $connect->query($queryCount);
-$custCount = $result->fetch(PDO::FETCH_ASSOC);
-$total = $custCount['id'];
-$pages = ceil($total / $limit);
-
-$Previous = $page - 1;
-$Next = $page + 1;
-
 if (!(isset($_SESSION['user']))) {
       header('location: http://localhost:8080/wpw/proyek');
+}
+
+if (isset($_POST['acc'])) {
+      try {
+            $idPinjam = $_POST['acc'];
+            $connect->exec("USE proyek");
+            $query = "UPDATE detail_peminjaman SET status = 'Approved' WHERE id_peminjaman = :id";
+            $statement = $connect->prepare($query);
+            $statement->bindParam(':id', $idPinjam);
+            $statement->execute();
+
+            $query = "SELECT * FROM detail_peminjaman WHERE id_peminjaman = :id";
+            $statement = $connect->prepare($query);
+            $statement->bindParam(':id', $idPinjam);
+            $statement->execute();
+            $data = $statement->fetchAll();
+
+            foreach ($data as $barang) {
+                  $namaBarang = $barang['barang'];
+                  $qtyBarang = $barang['quantity'];
+
+                  $query = "UPDATE barang SET tersedia = tersedia - :qty WHERE nama_barang = :nama";
+                  $statement = $connect->prepare($query);
+                  $statement->bindParam(':qty', $qtyBarang);
+                  $statement->bindParam(':nama', $namaBarang);
+                  $statement->execute();
+            }
+      } catch (PDOException $e) {
+            echo $e->getMessage();
+      }
 }
 
 if (isset($_POST['finish'])) {
@@ -80,6 +77,8 @@ if (isset($_POST['finish'])) {
       <!-- font -->
       <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css2?family=Viga&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
@@ -160,10 +159,6 @@ if (isset($_POST['finish'])) {
       <div class="container-fluid">
             <div class="bar fixed-top shadow d-flex justify-content-between align-items-center" style="height: 50px; " data-bs-theme="dark">
                   <h4 class=" text-white mt-2">SLELS</h4>
-                  <p class="text-white mt-3">
-                        <?php if (isset($_SESSION['user'])) :
-                              echo $_SESSION['user'];
-                        endif ?></p>
             </div>
 
             <div class=" row mt-5">
@@ -215,86 +210,70 @@ if (isset($_POST['finish'])) {
                   </div>
                   <!-- table section -->
                   <div class="col-9  ms-auto me-auto bg-white rounded-2 pt-3 " style="max-height:80vh; margin-top: 30px;">
-                        <div class="d-flex align-items-center  justify-content-between ps-1 pe-4 mb-2">
-                              <button class="btn-primary btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                                          <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
-                                    </svg><a href="input-pengguna.php" class="text-white">Tambah</a>
-                              </button>
-                              <form method="post" action="#">
-                                    <select name="limit-records" id="limit-records">
-                                          <option disabled="disabled" selected="selected">Show</option>
-                                          <?php foreach ([10, 100, 500, 1000, 5000] as $limit) : ?>
-                                                <option <?php if (isset($_GET["limit-records"]) && $_GET["limit-records"] == $limit) echo "selected" ?> value="<?= $limit; ?>"><?= $limit; ?></option>
-                                          <?php endforeach; ?>
-                                    </select>
-                              </form>
-                        </div>
-                        <div class="table-view overflow-auto" style="height:80%;">
-                              <table class="table table-striped ">
-                                    <tr>
-                                          <thead>
+                        <?php
+                        include '../connection.php';
+                        $currentUser = $_SESSION['user'];
+                        $connect->exec("USE proyek");
+                        $query = "SELECT * FROM detail_peminjaman ";
+                        $statement = $connect->prepare($query);
+                        $statement->execute();
+                        $rowCount = $statement->rowCount();
 
+                        if ($rowCount === 0) { ?>
+                              <div class="img-fluid d-flex justify-content-center align-items-center  ms-auto me-auto" style="min-height:100%;">
+                                    <img src=" ../asset/congratsAdmin.png" alt="" style="max-width: 380px;max-height:380px;">
+                              </div>
+                        <?php } else if ($rowCount > 0) { ?>
+                              <div class="table-view overflow-auto" style="height:80%;">
+                                    <table class="table table-striped ">
+                                          <thead>
                                                 <th scope="col">No.</th>
                                                 <th scope="col">Id Peminjaman</th>
                                                 <th scope="col">Nama Peminjam</th>
                                                 <th scope="col">Tanggal Pengembalian</th>
-                                                <th scope="col" class="ps-5">Action</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                          <?php
-                                          include '../connection.php';
-                                          $connect->exec("USE proyek");
-                                          $query = "SELECT DISTINCT * FROM detail_peminjaman";
-                                          $statement = $connect->prepare($query);
-                                          $statement->execute();
-                                          $jobs = $statement->fetchAll();
-                                          $i = 1;
-                                          foreach ($jobs as $job) {  ?>
-                                                <tr>
-                                                      <td><?php echo $i; ?></td>
-                                                      <td><?php echo $job['id_peminjaman']; ?></td>
-                                                      <td><?php echo $job['nama_user']; ?></td>
-                                                      <td><?php echo $job['tanggal_pengembalian']; ?></td>
-                                                      <td class="d-flex justify-content-start">
-                                                            <form method="POST" action="../peminjaman/">
-                                                                  <input type="text" name="idbarang" value="<?= $job['barang'] ?>" style="display: none"">
-                                                                  <input type=" text" name="quantity" value="<?= $job['quantity'] ?>" style="display: none;">
-                                                                  <button type="submit" class="btn btn-primary d-flex align-items-center" style="font-size: 14px;" name="finish" value="<?= $job['id_peminjaman']; ?>"><span class="material-symbols-outlined">
-                                                                              task_alt
-                                                                        </span>&#160; Dikembalikan</button>
-                                                            </form>
-                                                      </td>
-                                                </tr>
-                                          <?php $i++;
-                                          } ?>
-                                    </tbody>
-                              </table>
-                        </div>
-                        <div class="row">
-                              <div class="row">
-                                    <div class="col-md-10">
-                                          <nav aria-label="Page navigation">
-                                                <ul class="pagination">
-                                                      <li>
-                                                            <a href="index.php?page=<?= $Previous; ?>" aria-label="Previous">
-                                                                  <span aria-hidden="true">&laquo; Previous</span>
-                                                            </a>
-                                                      </li>
-                                                      <?php for ($i = 1; $i <= $pages; $i++) : ?>
-                                                            <li><a href="index.php?page=<?= $i; ?>"><?= $i; ?></a></li>
-                                                      <?php endfor; ?>
-                                                      <li>
-                                                            <a href="index.php?page=<?= $Next; ?>" aria-label="Next">
-                                                                  <span aria-hidden="true">Next &raquo;</span>
-                                                            </a>
-                                                      </li>
-                                                </ul>
-                                          </nav>
-                                    </div>
+                                                <th scope="col" class="ps-5">Aksi</th>
+                                          </thead>
+                                          <tbody>
+                                                <?php
+                                                include '../connection.php';
+                                                $connect->exec("USE proyek");
+                                                $query = "SELECT id_peminjaman, nama_user, MAX(barang) AS barang, MAX(quantity) AS quantity, tanggal_pengembalian, status FROM detail_peminjaman GROUP BY id_peminjaman, nama_user, tanggal_pengembalian, status  ";
+                                                $statement = $connect->prepare($query);
+                                                $statement->execute();
+                                                $jobs = $statement->fetchAll();
+                                                $i = 1;
+                                                foreach ($jobs as $job) {  ?>
+                                                      <tr>
+                                                            <td><?php echo $i; ?></td>
+                                                            <td><?php echo $job['id_peminjaman']; ?></td>
+                                                            <td><?php echo $job['nama_user']; ?></td>
+                                                            <td><?php echo $job['tanggal_pengembalian']; ?></td>
+                                                            <td class="d-flex justify-content-start">
+                                                                  <form method="POST" action="../peminjaman/">
+                                                                        <?php if ($job['status'] == 'Waiting') { ?>
+                                                                              <div class="d-flex">
+                                                                                    <button type="submit" class="btn btn-primary d-flex align-items-center" style="font-size: 14px;" name="acc" value="<?= $job['id_peminjaman']; ?>"><span class="material-symbols-outlined"> task_alt
+                                                                                          </span> Setujui</button>
+                                                                                    <button type="submit" class="btn btn-danger d-flex align-items-center" style="font-size: 14px;" name="reject" value="<?= $job['id_peminjaman']; ?>"><span class="material-symbols-outlined"> cancel
+                                                                                          </span>&#160; Tolak &#160;</button>
+                                                                              </div>
                               </div>
-                        </div>
+                        <?php } else if ($job['status'] == 'Approved') { ?>
+                              <input type="text" name="idbarang" value="<?= $job['barang']; ?>" style="display: none;">
+                              <input type="text" name="quantity" value="<?= $job['quantity']; ?>" style="display: none;">
+                              <button type="submit" class="btn btn-primary d-flex align-items-center" style="font-size: 14px;" name="finish" value="<?= $job['id_peminjaman']; ?>"><span class="material-symbols-outlined">
+                                          approval_delegation
+                                    </span>&#160; Dikembalikan</button>
+                        <?php } ?>
+                        </form>
+                        </td>
+                        </tr>
+                  <?php $i++;
+                                                } ?>
+                  </tbody>
+                  </table>
                   </div>
+            <?php } ?>
             </div>
 
             <script src="../js/bootstrap.bundle.min.js"></script>

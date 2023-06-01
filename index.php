@@ -197,6 +197,7 @@ session_start();
             </div>
       </div>
 
+
       <script src="js/bootstrap.bundle.min.js"></script>
       <script src="js/jquery-3.6.1.min.js"></script>
       <script src="js/index.js"></script>
@@ -204,12 +205,13 @@ session_start();
       include 'connection.php';
       if (isset($_SESSION['user'])) {
             $connect->exec("USE proyek");
+
             $jmlStmnt = "SELECT nama_user FROM user WHERE username = :uname";
             $stmnt = $connect->prepare($jmlStmnt);
             $stmnt->bindParam(':uname', $_SESSION['user']);
             $stmnt->execute();
-
             $userId = $stmnt->fetchColumn();
+
             $sql = "SELECT tanggal_pengembalian, barang, nama_user FROM detail_peminjaman WHERE nama_user = :userId";
             $statement = $connect->prepare($sql);
             $statement->bindParam(':userId', $userId);
@@ -225,15 +227,15 @@ session_start();
             foreach ($returnDates as $returnDate) {
                   $tanggalPengembalian = $returnDate['tanggal_pengembalian'] ?? null;
                   if ($tanggalPengembalian == $oneDayAway) {
-                        echo "<script>alert(\"Halo\")</script>";
                         $namaStmnt = "SELECT nama_user FROM user WHERE nama_user = :userId";
                         $namaStatement = $connect->prepare($namaStmnt);
                         $namaStatement->bindParam(':userId', $returnDate['nama_user']);
                         $namaStatement->execute();
                         $namauser = $namaStatement->fetchColumn();
-                        $barangStmnt = "SELECT nama_barang FROM barang WHERE nama_barang = :barangId";
+
+                        $barangStmnt = "SELECT nama_barang FROM barang WHERE nama_barang = :userId";
                         $barangStatement = $connect->prepare($barangStmnt);
-                        $barangStatement->bindParam(':barangId', $returnDate['barang']);
+                        $barangStatement->bindParam(':userId', $returnDate['barang']);
                         $barangStatement->execute();
                         $namaBarang = $barangStatement->fetchColumn();
 
@@ -286,6 +288,7 @@ session_start();
             }
       }
       ?>
+
 </body>
 
 </html>
