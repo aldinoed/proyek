@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
+if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
       header('location: http://localhost:8080/wpw/proyek');
 }
 
@@ -139,13 +139,11 @@ if (isset($_GET['update'])) {
 include '../connection.php';
 if (isset($_POST['login'])) {
       try {
-            echo "<script>alert('Login Successfully')</script>";
             $id = $_POST['id'];
             $nama = $_POST['nama'];
             $uname = $_POST['uname'];
             $passwd = $_POST['passwd'];
             $telp = $_POST['telp'];
-            $role = $_POST['role'];
 
             $connect->exec("USE proyek");
             $query = " UPDATE user SET nama_user = :nama, username = :uname, password = :passwd,  telepon = :telp WHERE id_user = :id";
@@ -156,8 +154,11 @@ if (isset($_POST['login'])) {
             $stmt->bindParam(':uname', $uname);
             $stmt->bindParam(':passwd', $passwd);
             $stmt->bindParam(':telp', $telp);
-            $stmt->bindParam(':role', $role);
             $stmt->execute();
+            echo "<script>alert(\"Data Berhasil Disimpan!\")</script>";
+            echo "<script>setTimeout(function() {
+        window.location.href = 'http://localhost:8080/wpw/proyek/userman'
+        }, 1)</script>";
       } catch (PDOException $e) {
             echo $e->getMessage();
       }

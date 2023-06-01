@@ -27,8 +27,8 @@ if ($_SESSION['role'] !== 'Admin' || !(isset($_SESSION['user']))) {
 <body class="bg-primary">
       <div class="p-3 mb-2  mt-5">
             <div class="align-self-center ">
-                  <p class="text-center fs-1 text-white">FORM PENGISIAN DATA BARANG LAB</p>
-                  <form style="max-height: 100vh; width: 60%; " class="p-4 m-auto shadow rounded bg-white" method="POST" action="form.php">
+                  <form style="max-height: 100vh; width: 60%; " class="p-4 m-auto shadow rounded bg-white" method="POST" action="form.php" enctype="multipart/form-data">
+                        <p class="text-center fs-2     ">Form Input Data Peralatan</p>
                         <div class="row mt-3 d-flex justify-content-center">
                               <div class="col-md">
                                     <div ">
@@ -48,6 +48,7 @@ if ($_SESSION['role'] !== 'Admin' || !(isset($_SESSION['user']))) {
                         <div class="d-flex mx-auto">
                               <input class="btn btn-primary me-2" type="submit" value="Submit" name="submit">
                               <input class="btn btn-danger" type="reset" value=" Clear ">
+                              <button type="reset" class="btn btn-secondary  tombol" style="margin-left:10px;"><a href="../invman" class="text-white" style="text-decoration:none">&#160;Back&#160;</a></button>
                         </div>
                   </form>
 
@@ -62,9 +63,15 @@ if ($_SESSION['role'] !== 'Admin' || !(isset($_SESSION['user']))) {
       if (isset($_POST['submit'])) {
             $namaBarang = $_POST["nama_barang"];
             $jumlah = $_POST["jumlah"];
-            $image = $_POST["image"];
+            // $image = $_FILES["image"];
+            $imageName = $_FILES["image"]["name"];
+            $imageTmp = $_FILES["image"]["tmp_name"];
+            $imagePath = "../uploads/" . $imageName;
+
+            move_uploaded_file($imageTmp, $imagePath);
+
             $connect->exec("USE proyek");
-            $query = "INSERT INTO `barang` (`id_barang`, `image_barang`, `nama_barang`, `jumlah`) VALUES (UUID(), '$image', '$namaBarang', '$jumlah')";
+            $query = "INSERT INTO `barang` (`id_barang`, `image_barang`, `nama_barang`, `jumlah`, `tersedia`) VALUES (UUID(), '$imagePath', '$namaBarang', '$jumlah', '$jumlah')";
             $statement = $connect->prepare($query);
             $result = $statement->execute();
 

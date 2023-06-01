@@ -224,7 +224,10 @@ if (isset($_POST['submit'])) {
                   $query = "UPDATE barang SET Tersedia = $jumlahAll WHERE nama_barang = '$barangItem'";
                   $statement = $connect->query($query);
             }
-            echo "<script>alert(\"Data Berhasil Disimpan\")</script>";
+            echo "<script>alert(\"Data Berhasil Disimpan!\")</script>";
+            echo "<script>setTimeout(function() {
+        window.location.href = 'http://localhost:8080/wpw/proyek/pinjam'
+        },10)</script>";
       } else {
             echo "<script>alert(\"Anda belum memilih satu barang \")</script>";
       }

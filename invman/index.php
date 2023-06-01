@@ -8,11 +8,11 @@ $connect->exec("USE proyek");
 
 if (isset($_POST['delete'])) {
       try {
-            $selectedNRP = $_POST['selectedNrp'];
+            $idBarang = $_POST['selectedNrp'];
             $connect->exec("USE proyek");
-            $query = "DELETE FROM user WHERE id_user = :nrp";
+            $query = "DELETE FROM barang WHERE id_barang = :idBarang";
             $statement = $connect->prepare($query);
-            $statement->bindParam(':nrp', $selectedNRP);
+            $statement->bindParam(':idBarang', $idBarang);
             $statement->execute();
       } catch (PDOException $e) {
             echo $e->getMessage();
@@ -27,7 +27,7 @@ if (isset($_POST['delete'])) {
       <meta charset="UTF-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>SMART-ILS</title>
+      <title>Tools Management</title>
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
       <!-- font -->
       <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
@@ -174,7 +174,7 @@ if (isset($_POST['delete'])) {
                                                 <th scope="col">No.</th>
                                                 <th scope="col">Id Barang</th>
                                                 <th scope="col">Nama Barang</th>
-                                                <th scope="col">Jumlah</th>
+                                                <th scope="col">Tersedia / Jumlah</th>
                                                 <th scope="col" class="ms-5">Action</th>
                                     </tr>
                                     </thead>
@@ -187,21 +187,21 @@ if (isset($_POST['delete'])) {
                                           $statement->execute();
                                           $users = $statement->fetchAll();
                                           $i = 1;
-                                          foreach ($users as $user) {  ?>
+                                          foreach ($users as $barang) {  ?>
                                                 <tr>
                                                       <td><?php echo $i; ?></td>
-                                                      <td><?php echo $user['id_barang']; ?></td>
-                                                      <td><?php echo $user['nama_barang']; ?></td>
-                                                      <td><?php echo $user['jumlah']; ?></td>
+                                                      <td><?php echo $barang['id_barang']; ?></td>
+                                                      <td><?php echo $barang['nama_barang']; ?></td>
+                                                      <td class="ps-5"><?php echo $barang['tersedia'] . '/' . $barang['jumlah'] ?></td>
                                                       <td class="d-flex justify-content-start">
                                                             <form method="GET" action="update.php">
-                                                                  <button class="btn btn-warning" name="update" value="<?= $user['id_barang']; ?>"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                                  <button class="btn btn-warning" name="update" value="<?= $barang['id_barang']; ?>"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                                                               <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                                                                               <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
                                                                         </svg></button>
                                                             </form>
                                                             <form method="POST" action="">
-                                                                  <input type="hidden" name="selectedNrp" value="<?= $user['id_barang'];  ?>">
+                                                                  <input type="hidden" name="selectedNrp" value="<?= $barang['id_barang'];  ?>">
                                                                   <button class="btn btn-danger" name="delete">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                                                               <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
