@@ -231,7 +231,7 @@ if (isset($_POST['finish'])) {
                                                 <th scope="col">Id Peminjaman</th>
                                                 <th scope="col">Nama Peminjam</th>
                                                 <th scope="col">Tanggal Pengembalian</th>
-                                                <th scope="col" class="ps-5">Aksi</th>
+                                                <th scope="col" class="ps-5">Action</th>
                                           </thead>
                                           <tbody>
                                                 <?php

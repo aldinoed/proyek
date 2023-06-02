@@ -186,6 +186,7 @@ if (isset($_POST['delete'])) {
                                                       <th scope="col">Id Peminjaman</th>
                                                       <th scope="col">Barang</th>
                                                       <th scope="col">Jumlah</th>
+                                                      <th scope="col">Tanggal Peminjaman</th>
                                                       <th scope="col">Tanggal Pengembalian</th>
                                                       <th scope="col">Status</th>
                                           </tr>
@@ -200,6 +201,7 @@ if (isset($_POST['delete'])) {
                                                             <td><?= $user['id_peminjaman']; ?></td>
                                                             <td><?= $user['nama_barang']; ?></td>
                                                             <td><?= $user['quantity']; ?></td>
+                                                            <td><?= $user['tanggal_peminjaman']; ?></td>
                                                             <td><?= $user['tanggal_pengembalian']; ?></td>
                                                             <td>
                                                                   <?php if ($user['status'] == 'Waiting') { ?>

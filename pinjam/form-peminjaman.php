@@ -24,10 +24,10 @@
 
 </head>
 
-<body>
+<body class="bg-primary">
       <div class="container">
-            <h1 class="d-flex justify-content-center  mt-4 mb-3">Form Peminjaman Barang Lab</h1>
-            <form method="POST" class="shadow rounded pt-1 pb-3 " style="max-height: 80vh">
+            <form method="POST" class="shadow rounded pt-1 mt-5 pb-4 bg-white " style="max-height: 80vh">
+                  <h1 class="d-flex justify-content-center  mt-4 mb-3">Form Peminjaman Barang Lab</h1>
                   <div class=" mt-5 row ms-auto me-auto overflow-auto" style="width:90%;">
                         <div class="col ">
                               <ul class="list-group overflow-scroll border" style="max-height: 50vh;">
@@ -65,9 +65,12 @@
                         </div>
                         <div class="row mt-3">
                               <div class="input-group">
-                                    <input type="text" class="form-control datepicker" placeholder="YYYY/MM/DD" name="date" value="">
+                                    <input type="text" class="form-control datepicker" placeholder="Masukkan tanggal peminjaman" name="datePinjam" value="">
                               </div>
-                              <div class="gap-2 mt-3 d-flex justify-content-center">
+                              <div class="input-group mt-3">
+                                    <input type="text" class="form-control datepicker" placeholder="Masukkan tanggal pengembalian" name="date" value="">
+                              </div>
+                              <div class="gap-2 mt-3 d-flex justify-content-start">
                                     <button name="submit" class="btn btn-primary shadow" type="submit" formaction="form-peminjaman.php">Submit</button>
                                     <button class="btn btn-danger shadow" type="reset"> <a href="../pinjam/form-peminjaman.php" class="text-white text-decoration-none">Clear</a> </button>
                                     <button type="button" class="btn btn-secondary shadow " name="kembali"> <a href="../pinjam/" class="text-white text-decoration-none">&#160;Back&#160; </a> </button>
@@ -91,9 +94,6 @@
                         orientation: 'bottom'
                   });
             });
-            // $(function() {
-            //       $('#datepicker').datepicker();
-            // });
 
             function addNewRow(event) {
                   event.preventDefault();
@@ -203,6 +203,7 @@ if (isset($_POST['submit'])) {
       $idPinjam = cekUuid();
       $namaUser = $_SESSION['user'];
       $date = date("Y-m-d");
+      $borrowDate = $_POST['datePinjam'];
       $returnDate = $_POST['date'];
 
       if (!empty($barang)) {
@@ -215,7 +216,7 @@ if (isset($_POST['submit'])) {
                   $idBarang = $statement->fetchColumn();
 
                   $quantityItem = $quantity[$i];
-                  $query = "INSERT INTO detail_peminjaman (id_peminjaman, id_user, id_barang, quantity, tanggal_pengembalian, status) VALUES ('$idPinjam', '$idUser','$idBarang', '$quantityItem', '$returnDate', 'Waiting')";
+                  $query = "INSERT INTO detail_peminjaman (id_peminjaman, id_user, id_barang, quantity, tanggal_pengembalian, status, tanggal_peminjaman) VALUES ('$idPinjam', '$idUser','$idBarang', '$quantityItem', '$returnDate', 'Waiting', '$borrowDate')";
                   $statement = $connect->prepare($query);
                   $statement->execute();
             }
