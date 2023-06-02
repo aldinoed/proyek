@@ -30,7 +30,7 @@
                   <h1 class="d-flex justify-content-center  mt-4 mb-3">Form Peminjaman Barang Lab</h1>
                   <div class=" mt-5 row ms-auto me-auto overflow-auto" style="width:90%;">
                         <div class="col ">
-                              <ul class="list-group overflow-scroll border" style="max-height: 50vh;">
+                              <ul class="list-group overflow-scroll border" style="max-height: 33vh;">
                                     <div class="list-group-item row d-flex justify-content-center">
                                           <div class="form-floating col-sm-6">
                                                 <div>
@@ -216,7 +216,7 @@ if (isset($_POST['submit'])) {
                   $idBarang = $statement->fetchColumn();
 
                   $quantityItem = $quantity[$i];
-                  $query = "INSERT INTO detail_peminjaman (id_peminjaman, id_user, id_barang, quantity, tanggal_pengembalian, status, tanggal_peminjaman) VALUES ('$idPinjam', '$idUser','$idBarang', '$quantityItem', '$returnDate', 'Waiting', '$borrowDate')";
+                  $query = "INSERT INTO detail_peminjaman (id_peminjaman, id_user, id_barang, quantity, tanggal_pengembalian, status, tanggal_peminjaman, status_diambil) VALUES ('$idPinjam', '$idUser','$idBarang', '$quantityItem', '$returnDate', 'Waiting', '$borrowDate', 'belum')";
                   $statement = $connect->prepare($query);
                   $statement->execute();
             }

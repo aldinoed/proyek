@@ -9,6 +9,19 @@ if (!(isset($_SESSION['user']))) {
       header('location: http://localhost:8080/wpw/proyek');
 }
 
+if (isset($_POST['reject']) || isset($_POST['delete'])) {
+      try {
+            $idPinjam = $_POST['idPinjam'];
+            $connect->exec("USE proyek");
+            $query = "DELETE FROM detail_peminjaman  WHERE id_peminjaman = :id";
+            $statement = $connect->prepare($query);
+            $statement->bindParam(':id', $idPinjam);
+            $statement->execute();
+      } catch (PDOException $e) {
+            echo $e->getMessage();
+      }
+}
+
 if (isset($_POST['acc'])) {
       try {
             $idPinjam = $_POST['acc'];
@@ -17,29 +30,38 @@ if (isset($_POST['acc'])) {
             $statement = $connect->prepare($query);
             $statement->bindParam(':id', $idPinjam);
             $statement->execute();
-
-            $query = "SELECT * FROM detail_peminjaman WHERE id_peminjaman = :id";
-            $statement = $connect->prepare($query);
-            $statement->bindParam(':id', $idPinjam);
-            $statement->execute();
-            $data = $statement->fetchAll();
-
-            foreach ($data as $barang) {
-                  $idBarang = $barang['id_barang'];
-                  $qtyBarang = $barang['quantity'];
-
-                  $query = "UPDATE barang SET tersedia = tersedia - :qty WHERE id_barang = :id";
-                  $statement = $connect->prepare($query);
-                  $statement->bindParam(':qty', $qtyBarang);
-                  $statement->bindParam(':id', $idBarang);
-                  $statement->execute();
-            }
       } catch (PDOException $e) {
             echo $e->getMessage();
       }
 }
 
-if (isset($_POST['finish'])) {
+if (isset($_POST['diambil'])) {
+      $idPinjam = $_POST['idPinjam'];
+      $barang = $_POST['idBarang'];
+      $query = "SELECT * FROM detail_peminjaman WHERE id_peminjaman = :id";
+      $statement = $connect->prepare($query);
+      $statement->bindParam(':id', $idPinjam);
+      $statement->execute();
+      $data = $statement->fetchAll();
+      $query = "UPDATE detail_peminjaman SET status_diambil = 'picked'  WHERE id_peminjaman = :id";
+      $statement = $connect->prepare($query);
+      // $statement->bindParam(':qty', $qtyBarang);
+      $statement->bindParam(':id', $idPinjam);
+      $statement->execute();
+
+      foreach ($data as $barang) {
+            $idBarang = $barang['id_barang'];
+            $qtyBarang = $barang['quantity'];
+
+            $query = "UPDATE barang SET tersedia = tersedia - :qty WHERE id_barang = :id";
+            $statement = $connect->prepare($query);
+            $statement->bindParam(':qty', $qtyBarang);
+            $statement->bindParam(':id', $idBarang);
+            $statement->execute();
+      }
+}
+
+if (isset($_POST['finish']) || isset($_POST['reject'])) {
       try {
             $selectedId = $_POST['finish'];
             $idBarang = $_POST['idbarang'];
@@ -77,6 +99,7 @@ if (isset($_POST['finish'])) {
       <!-- font -->
       <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css2?family=Viga&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
@@ -183,7 +206,7 @@ if (isset($_POST['finish'])) {
 
                                     <div class="btn fitur d-flex justify-content-center align-items-center" style="padding-right: 40px"><span class="text-white  material-symbols-outlined">
                                                 edit_note
-                                          </span><a class="text-white align-items-center" href="#">&#160;&#160;Data Peminjaman</a></div>
+                                          </span><a class="text-white align-items-center" href="../peminjaman/">&#160;&#160;Data Peminjaman</a></div>
                                     <div class="btn fitur d-flex justify-content-center align-items-center"><span class="text-white  material-symbols-outlined">
                                                 home_repair_service
                                           </span><a class="text-white align-items-center" href="../invman/">&#160;&#160;Manajemen Peralatan</a></div>
@@ -229,15 +252,16 @@ if (isset($_POST['finish'])) {
                                           <thead>
                                                 <th scope="col">No.</th>
                                                 <th scope="col">Id Peminjaman</th>
-                                                <th scope="col">Nama Peminjam</th>
+                                                <th scope="col">Id Peminjam</th>
+                                                <th scope="col">Tanggal Pinjam</th>
                                                 <th scope="col">Tanggal Pengembalian</th>
-                                                <th scope="col" class="ps-5">Action</th>
+                                                <th scope="col" class="ps-4">Action</th>
                                           </thead>
                                           <tbody>
                                                 <?php
                                                 include '../connection.php';
                                                 $connect->exec("USE proyek");
-                                                $query = "SELECT dp.id_peminjaman, MAX(u.nama_user) AS nama_user, MAX(b.nama_barang) AS nama_barang, MAX(dp.id_barang) AS id_barang, MAX(dp.quantity) AS quantity, MAX(dp.tanggal_pengembalian) AS tanggal_pengembalian, MAX(dp.status) AS status  FROM detail_peminjaman dp INNER JOIN barang b ON dp.id_barang = b.id_barang INNER JOIN user u ON dp.id_user = u.id_user GROUP BY dp.id_peminjaman";
+                                                $query = "SELECT dp.id_peminjaman, MAX(u.nama_user) AS nama_user, MAX(u.id_user) AS id_user,  MAX(b.nama_barang) AS nama_barang, MAX(dp.id_barang) AS id_barang, MAX(dp.quantity) AS quantity, MAX(dp.tanggal_pengembalian) AS tanggal_pengembalian,MAX(dp.tanggal_peminjaman) AS tanggal_peminjaman , MAX(dp.status_diambil) AS status_diambil ,MAX(dp.status) AS status  FROM detail_peminjaman dp INNER JOIN barang b ON dp.id_barang = b.id_barang INNER JOIN user u ON dp.id_user = u.id_user GROUP BY dp.id_peminjaman";
 
                                                 $statement = $connect->prepare($query);
                                                 $statement->execute();
@@ -247,48 +271,72 @@ if (isset($_POST['finish'])) {
                                                       <tr>
                                                             <td><?php echo $i; ?></td>
                                                             <td><?php echo $job['id_peminjaman']; ?></td>
-                                                            <td><?php echo $job['nama_user']; ?></td>
+                                                            <td><?php echo $job['id_user']; ?></td>
+                                                            <td><?php echo $job['tanggal_peminjaman']; ?></td>
                                                             <td><?php echo $job['tanggal_pengembalian']; ?></td>
                                                             <td class="d-flex justify-content-start">
                                                                   <form method="POST" action="../peminjaman/">
                                                                         <?php if ($job['status'] == 'Waiting') { ?>
-                                                                              <div class="d-flex">
-                                                                                    <button type="submit" class="btn btn-primary d-flex align-items-center" style="font-size: 14px;" name="acc" value="<?= $job['id_peminjaman']; ?>"><span class="material-symbols-outlined"> task_alt
-                                                                                          </span> Setujui</button>
-                                                                                    <button type="submit" class="btn btn-danger d-flex align-items-center" style="font-size: 14px;" name="reject" value="<?= $job['id_peminjaman']; ?>"><span class="material-symbols-outlined"> cancel
-                                                                                          </span>&#160; Tolak &#160;</button>
-                                                                              </div>
+                                                                              <input type="text" style="display:none" name="idPinjam" value=" <?= $job['id_peminjaman']; ?>"" id="">
+                                                                              <div class=" d-flex">
+                                                                              <button type="submit" class="btn btn-primary d-flex align-items-center" style="font-size: 14px;" name="acc" value="<?= $job['id_peminjaman']; ?>"><span class="material-symbols-outlined"> task_alt
+                                                                                    </span> Setujui</button>
+                                                                              <button type="submit" class="btn btn-danger d-flex align-items-center" style="font-size: 14px;" name="reject"><span class="material-symbols-outlined"> cancel
+                                                                                    </span>&#160; Tolak &#160;</button>
                               </div>
-                        <?php } else if ($job['status'] == 'Approved') { ?>
-                              <input type="text" name="idbarang" value="<?= $job['id_barang']; ?>" style="display: none;">
-                              <input type="text" name="quantity" value="<?= $job['quantity']; ?>" style="display: none;">
-                              <button type="submit" class="btn btn-primary d-flex align-items-center" style="font-size: 14px;" name="finish" value="<?= $job['id_peminjaman']; ?>"><span class="material-symbols-outlined">
-                                          approval_delegation
-                                    </span>&#160; Dikembalikan</button>
-                        <?php } ?>
-                        </form>
-                        </td>
-                        </tr>
-                  <?php $i++;
-                                                } ?>
-                  </tbody>
-                  </table>
+                  </div>
+            <?php } else if ($job['status'] == 'Approved') { ?>
+                  <div class="d-flex">
+                        <input type="text" name="idbarang" value="<?= $job['id_barang']; ?>" style="display: none;">
+                        <input style="display: none;" type="text" name="quantity" value="<?= $job['quantity']; ?>">
+                        <input style="display: none;" type="text" name="idPinjam" value="<?= $job['id_peminjaman']; ?>">
+
+                        <button type="submit" class="btn btn-primary d-flex align-items-center" style="font-size: 14px;" name="diambil" value="<?= $job['id_peminjaman']; ?>"><span class="material-symbols-outlined">
+                                    add_task
+                              </span>&#160; Diambil</button>
+                        <button class="btn btn-danger" name="delete">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                              </svg>
+                              Hapus
+                        </button>
+                  </div>
+            <?php } else if ($job['status_diambil'] == 'picked') { ?>
+                  <div class="d-flex">
+                        <input type="text" name="idbarang" value="<?= $job['id_barang']; ?>" style="display: none;">
+                        <input style="display: none;" type="text" name="quantity" value="<?= $job['quantity']; ?>">
+                        <input style="display: none;" type="text" name="idPinjam" value="<?= $job['id_peminjaman']; ?>">
+
+                        <button type="submit" class="btn btn-primary d-flex align-items-center" style="font-size: 14px;" name="finish" value="<?= $job['id_peminjaman']; ?>"><span class="material-symbols-outlined">
+                                    approval_delegation
+                              </span>&#160; Dikembalikan</button>
+
                   </div>
             <?php } ?>
+            </form>
+            </td>
+            </tr>
+      <?php $i++;
+                                                } ?>
+      </tbody>
+      </table>
             </div>
+      <?php } ?>
+      </div>
 
-            <script src="../js/bootstrap.bundle.min.js"></script>
-            <script src="../js/jquery-3.6.1.min.js"></script>
-            <script>
-                  $(document).ready(function() {
-                        $("#limit-records").change(function() {
-                              $('form').submit();
-                        })
+      <script src="../js/bootstrap.bundle.min.js"></script>
+      <script src="../js/jquery-3.6.1.min.js"></script>
+      <script>
+            $(document).ready(function() {
+                  $("#limit-records").change(function() {
+                        $('form').submit();
                   })
-            </script>
-            <?php
+            })
+      </script>
+      <?php
 
-            ?>
+      ?>
 </body>
 
 </html>
