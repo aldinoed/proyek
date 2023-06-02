@@ -129,7 +129,7 @@ if (isset($_POST['login'])) {
             $stmt->bindParam(':telp', $telp);
             $stmt->bindParam(':role', $role);
             $stmt->execute();
-            echo "<script>alert('Update Successfully')</script>";
+            echo "<script>alert('Data Berhasil Disimpan')</script>";
       } catch (PDOException $e) {
             echo $e->getMessage();
       }

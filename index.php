@@ -94,7 +94,7 @@ session_start();
 <body class="secondary">
       <div class="container-fluid">
             <div class="bar fixed-top shadow d-flex justify-content-between align-items-center" style="height: 50px; " data-bs-theme="dark">
-                  <h4 class=" text-white mt-2">SLELS</h4>
+                  <h4 class=" text-white mt-2">Smart Laboratory Equipment Loan System</h4>
                   <p class="text-white mt-3">
                         <?php if (isset($_SESSION['user'])) :
                               echo $_SESSION['user'];
@@ -176,7 +176,7 @@ session_start();
                               <table class="table table-striped ">
                                     <tr>
                                           <thead>
-                                                <th scope="col">No.</th>
+                                                <th scope="col">Lihat</th>
                                                 <th scope="col">Id Peminjaman</th>
                                                 <th scope="col">Tanggal Peminjaman</th>
                                                 <th scope="col">Tanggal Pengembalian</th>
@@ -188,7 +188,13 @@ session_start();
                                           $i = 1;
                                           foreach ($users as $user) {  ?>
                                                 <tr>
-                                                      <td><?= $i; ?></td>
+                                                      <td>
+                                                            <form action="preview.php" method="GET">
+                                                                  <button class="btn" name="id_peminjaman" value="<?= $job['id_peminjaman']; ?>"><span class="material-symbols-outlined">
+                                                                              open_in_new
+                                                                        </span></button>
+                                                            </form>
+                                                      </td>
                                                       <td><?= $user['id_peminjaman']; ?></td>
                                                       <td><?= $user['tanggal_peminjaman']; ?></td>
                                                       <td><?= $user['tanggal_pengembalian']; ?></td>
@@ -213,13 +219,13 @@ session_start();
       if (isset($_SESSION['user'])) {
             $connect->exec("USE proyek");
 
-            $jmlStmnt = "SELECT nama_user FROM user WHERE username = :uname";
+            $jmlStmnt = "SELECT id_user FROM user WHERE username = :uname";
             $stmnt = $connect->prepare($jmlStmnt);
             $stmnt->bindParam(':uname', $_SESSION['user']);
             $stmnt->execute();
             $userId = $stmnt->fetchColumn();
 
-            $sql = "SELECT tanggal_pengembalian, barang, nama_user FROM detail_peminjaman WHERE nama_user = :userId";
+            $sql = "SELECT tanggal_pengembalian, id_barang, id_user FROM detail_peminjaman WHERE id_user = :userId";
             $statement = $connect->prepare($sql);
             $statement->bindParam(':userId', $userId);
             $statement->execute();
@@ -234,15 +240,15 @@ session_start();
             foreach ($returnDates as $returnDate) {
                   $tanggalPengembalian = $returnDate['tanggal_pengembalian'] ?? null;
                   if ($tanggalPengembalian == $oneDayAway) {
-                        $namaStmnt = "SELECT nama_user FROM user WHERE nama_user = :userId";
+                        $namaStmnt = "SELECT nama_user FROM user WHERE id_user = :userId";
                         $namaStatement = $connect->prepare($namaStmnt);
-                        $namaStatement->bindParam(':userId', $returnDate['nama_user']);
+                        $namaStatement->bindParam(':userId', $returnDate['id_user']);
                         $namaStatement->execute();
                         $namauser = $namaStatement->fetchColumn();
 
-                        $barangStmnt = "SELECT nama_barang FROM barang WHERE nama_barang = :userId";
+                        $barangStmnt = "SELECT nama_barang FROM barang WHERE id_barang = :userId";
                         $barangStatement = $connect->prepare($barangStmnt);
-                        $barangStatement->bindParam(':userId', $returnDate['barang']);
+                        $barangStatement->bindParam(':userId', $returnDate['id_barang']);
                         $barangStatement->execute();
                         $namaBarang = $barangStatement->fetchColumn();
 

@@ -109,7 +109,7 @@ if (isset($_POST['delete'])) {
 <body class="" style="background-color: #ddd;">
       <div class="container-fluid">
             <div class="bar fixed-top shadow d-flex justify-content-between align-items-center" style="height: 50px; " data-bs-theme="dark">
-                  <h4 class=" text-white mt-2">SLELS</h4>
+                  <h4 class=" text-white mt-2">Smart Laboratory Equipment Loan System</h4>
             </div>
 
             <div class=" row mt-5">

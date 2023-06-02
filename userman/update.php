@@ -90,7 +90,7 @@ if (isset($_GET['update'])) {
                               <div class="row mb-1">
                                     <label for="exampleInputPassword" class="col-sm-5 col-form-label">Password</label>
                                     <div class="col-sm-11">
-                                          <input disabled type="password" class="form-control" id="InputPassword" name="passwd" value="<?= $users['password']; ?>">
+                                          <input required disabled type="password" class="form-control" id="InputPassword" name="passwd">
                                     </div>
                                     <div class="col-sm-1 d-flex justify-content-center">
                                           <button type="button" onclick="toggleForm('InputPassword')" class="btn btn-warning update4" name="update" value=""><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -142,7 +142,7 @@ if (isset($_POST['login'])) {
             $id = $_POST['id'];
             $nama = $_POST['nama'];
             $uname = $_POST['uname'];
-            $passwd = $_POST['passwd'];
+            $passwd = md5($_POST['passwd']);
             $telp = $_POST['telp'];
 
             $connect->exec("USE proyek");

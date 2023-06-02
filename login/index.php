@@ -43,8 +43,8 @@ if (isset($_SESSION['user'])) {
       <div class="container d-flex justify-content-center align-items-center mt-1">
             <div class="card login-card p-3 shadow-lg">
                   <div class="card-body">
-                        <div class="row">
-                              <h3 class="text-center fw-bold">E - ITMS</h3>
+                        <div class="row mb-2">
+                              <h3 class="text-center fw-bold fs-5 ">Smart Laboratory Equipment Loan System</h3>
                         </div>
                         <div class="row">
                               <form method="post">
@@ -97,7 +97,7 @@ if (isset($_SESSION['user'])) {
                         $stmnt->bindParam(':username', $username);
                         $stmnt->execute();
                         $role = $stmnt->fetchColumn();
-                        $_SESSION['role'] = $role;
+                        $_SESSION['role'] = "$role";
                         $idStmnt = "SELECT id_user FROM user WHERE username = :username";
                         $stmnt = $connect->prepare($idStmnt);
                         $stmnt->bindParam(':username', $username);

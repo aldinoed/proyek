@@ -1,7 +1,7 @@
 <?php session_start();
 
 include '../connection.php';
-if ($_SESSION['role'] !== 'Dosen' || $_SESSION['role'] !== 'Mahasiswa' || !(isset($_SESSION['user']))) {
+if (!(isset($_SESSION['user'])) || $_SESSION['role'] == 'Admin') {
       header('location: http://localhost:8080/wpw/proyek');
 }
 ?>

@@ -2,7 +2,7 @@
 session_start();
 
 include '../connection.php';
-if ($_SESSION['role'] !== 'Dosen' || $_SESSION['role'] !== 'Mahasiswa' || !(isset($_SESSION['user']))) {
+if (!(isset($_SESSION['user'])) || $_SESSION['role'] == 'Admin') {
       header('location: http://localhost:8080/wpw/proyek');
 }
 
@@ -115,7 +115,7 @@ if (isset($_POST['delete'])) {
 <body class="" style="background-color: #ddd;">
       <div class="container-fluid">
             <div class="bar fixed-top shadow d-flex justify-content-between align-items-center" style="height: 50px; " data-bs-theme="dark">
-                  <h4 class=" text-white mt-2">SLELS</h4>
+                  <h4 class=" text-white mt-2">Smart Laboratory Equipment Loan System</h4>
                   <p class="text-white mt-3">
                         <?php if (isset($_SESSION['user'])) :
                               echo $_SESSION['user'];
