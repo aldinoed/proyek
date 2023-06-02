@@ -11,7 +11,7 @@ session_start();
       <meta charset="UTF-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>SMART-ILS</title>
+      <title>SLELS</title>
       <link href="css/bootstrap.min.css" rel="stylesheet">
 
       <!-- font -->
@@ -161,35 +161,42 @@ session_start();
                               <?php } ?>
                         </div>
                   </div>
-                  <div class="col-9">
-                        <div class="table-view overflow-auto">
-                              <table class="table">
-                                    <thead>
-                                          <tr>
-                                                <th scope="col">#</th>
-                                                <th scope="col">First</th>
-                                                <th scope="col">Last</th>
-                                                <th scope="col">Handle</th>
-                                          </tr>
+                  <div class="col-9   ms-auto me-auto bg-white rounded-2 pt-3 " style="max-height:76vh; margin-top: 80px;">
+
+                        <?php
+                        include 'connection.php';
+                        $connect->exec("USE proyek");
+
+                        $query = "SELECT dp.*, b.nama_barang, u.nama_user FROM detail_peminjaman dp INNER JOIN barang b ON dp.id_barang = b.id_barang INNER JOIN user u ON dp.id_user = u.id_user WHERE status_diambil = 'picked'";
+                        $statement = $connect->prepare($query);
+                        $statement->execute();
+                        $rowCount = $statement->rowCount(); ?>
+
+                        <div class="table-view overflow-auto" style="height:80%;">
+                              <table class="table table-striped ">
+                                    <tr>
+                                          <thead>
+                                                <th scope="col">No.</th>
+                                                <th scope="col">Id Peminjaman</th>
+                                                <th scope="col">Tanggal Peminjaman</th>
+                                                <th scope="col">Tanggal Pengembalian</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
-                                          <tr>
-                                                <th scope="row">1</th>
-                                                <td>Mark</td>
-                                                <td>Otto</td>
-                                                <td>@mdo</td>
-                                          </tr>
-                                          <tr>
-                                                <th scope="row">2</th>
-                                                <td>Jacob</td>
-                                                <td>Thornton</td>
-                                                <td>@fat</td>
-                                          </tr>
-                                          <tr>
-                                                <th scope="row">3</th>
-                                                <td colspan="2">Larry the Bird</td>
-                                                <td>@twitter</td>
-                                          </tr>
+
+                                          <?php $users = $statement->fetchAll();
+                                          $i = 1;
+                                          foreach ($users as $user) {  ?>
+                                                <tr>
+                                                      <td><?= $i; ?></td>
+                                                      <td><?= $user['id_peminjaman']; ?></td>
+                                                      <td><?= $user['tanggal_peminjaman']; ?></td>
+                                                      <td><?= $user['tanggal_pengembalian']; ?></td>
+                                                </tr>
+                                          <?php $i++;
+                                          }
+
+                                          ?>
                                     </tbody>
                               </table>
                         </div>

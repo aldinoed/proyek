@@ -1,4 +1,10 @@
-<?php session_start(); ?>
+<?php session_start();
+
+include '../connection.php';
+if ($_SESSION['role'] !== 'Dosen' || $_SESSION['role'] !== 'Mahasiswa' || !(isset($_SESSION['user']))) {
+      header('location: http://localhost:8080/wpw/proyek');
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 

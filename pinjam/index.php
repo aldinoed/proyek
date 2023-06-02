@@ -1,10 +1,11 @@
 <?php
 session_start();
-include '../connection.php';
 
-if (!(isset($_SESSION['user'])) || $_SESSION['role'] == 'Admin') {
+include '../connection.php';
+if ($_SESSION['role'] !== 'Dosen' || $_SESSION['role'] !== 'Mahasiswa' || !(isset($_SESSION['user']))) {
       header('location: http://localhost:8080/wpw/proyek');
 }
+
 
 $connect->exec("USE proyek");
 if (isset($_POST['delete'])) {
@@ -28,7 +29,7 @@ if (isset($_POST['delete'])) {
       <meta charset="UTF-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>User Management</title>
+      <title>Daftar Pinjam</title>
       <!-- <link href="../css/bootstrap.min.css" rel="stylesheet"> -->
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
       <!-- font -->

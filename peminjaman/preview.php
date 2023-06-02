@@ -1,3 +1,11 @@
+<?php
+session_start();
+include '../connection.php';
+if ($_SESSION['role'] !== 'Admin' || !(isset($_SESSION['user']))) {
+      header('location: http://localhost:8080/wpw/proyek');
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,8 +13,8 @@
       <meta charset="UTF-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Document</title>
-      <link rel="stylesheet" href="bootstrap.min.css">
+      <title>Preview</title>
+      <link rel="stylesheet" href="../css/bootstrap.min.css">
       <style>
             /* RESET & BASIC STYLES
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -25,7 +33,7 @@
 
             body {
                   margin: 50px 0 150px;
-                  font-family: "Noto Sans", sans-serif;
+                  font-family: "Viga", sans-serif;
             }
 
             .container {
@@ -38,15 +46,20 @@
                   font-size: 1.5em;
             }
 
+            th {
+                  background-color: darkblue;
+                  color: white;
+            }
+
             /* TABLE STYLES
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
-            .table-wrapper {
+            /* .table-wrapper {
                   overflow-x: auto;
             }
 
             .table-wrapper::-webkit-scrollbar {
                   height: 8px;
-            }
+            }*/
 
             .table-wrapper::-webkit-scrollbar-thumb {
                   background: var(--darkblue);
@@ -58,6 +71,7 @@
                   border-radius: 40px;
             }
 
+            /*
             .table-wrapper table {
                   margin: 50px 0 20px;
                   border-collapse: collapse;
@@ -108,69 +122,66 @@
                   display: flex;
                   margin-left: 4px;
             }
+
+            */
       </style>
 </head>
 
 <body>
       <div class="container">
-            <h1>Detail Peminjaman Barang</h1>
-            <div class="table-wrapper">
-                  <table>
-                        <thead>
-                              <tr>
-                                    <th>Id_Peminjaman</th>
-                                    <th>Nama_User</th>
-                                    <th>Barang</th>
-                                    <th>Quantity</th>
-                                    <th>Tanggal_Pengembalian</th>
-                                    <th>Status</th>
-                              </tr>
-                        </thead>
-                        <tbody>
+            <div class="card shadow rounded d-flex justify-content-center p-3">
+                  <h1 class="text-center">Detail Peminjaman Barang</h1>
+                  <div class="table-wrapper stripped p-3 table-stripped-columns overflow-auto" style="width:100%">
+                        <table style="width:100%">
+                              <thead>
+                                    <tr>
+                                          <th class="d-flex justify-content-center" scope="col">Id Peminjaman</th>
+                                          <th class="ps-5" scope="col">Nama User</th>
+                                          <th scope="col">Nama Barang</th>
+                                          <th scope="col">Quantity</th>
+                                          <th scope="col">Tanggal Peminjaman</th>
+                                          <th scope="col">Tanggal Pengembalian</th>
+                                    </tr>
+                              </thead>
+                              <tbody>
 
-                              <?php
-                              include('connection.php');
+                                    <?php
+                                    include('../connection.php');
+                                    $connect->exec("USE proyek");
+                                    if (isset($_GET['id_peminjaman'])) {
+                                          $idPeminjaman = $_GET['id_peminjaman'];
 
-                              if (isset($_GET['id_peminjaman'])) {
-                                    $id_peminjaman = $_GET['id_peminjaman'];
+                                          $query = "SELECT dp.id_peminjaman, MAX(u.nama_user) AS nama_user, MAX(u.id_user) AS id_user,  MAX(b.nama_barang) AS nama_barang, MAX(dp.id_barang) AS id_barang, MAX(dp.quantity) AS quantity, MAX(dp.tanggal_pengembalian) AS tanggal_pengembalian,MAX(dp.tanggal_peminjaman) AS tanggal_peminjaman , MAX(dp.status_diambil) AS status_diambil ,MAX(dp.status) AS status  FROM detail_peminjaman dp INNER JOIN barang b ON dp.id_barang = b.id_barang INNER JOIN user u ON dp.id_user = u.id_user GROUP BY dp.id_peminjaman";
+                                          $stmt = $connect->prepare($query);
+                                          // $stmt->bindParam(':id_peminjaman', $idPeminjaman);
+                                          $stmt->execute();
+                                          $result = $stmt->fetchAll();
 
-                                    $query = "SELECT * FROM detail_peminjaman WHERE id_peminjaman = :id_peminjaman";
-                                    $stmt = $connect->prepare($query);
-                                    $stmt->bindParam(':id_peminjaman', $id_peminjaman);
-                                    $stmt->execute();
-                                    $result = $stmt->fetchAll();
-
-                                    // Tampilkan detail peminjaman
-                                    if ($stmt->rowCount() > 0) {
-                                          foreach ($result as $row) {
-                                                echo "<tr>";
-                                                echo "<td>{$row['id_peminjaman']}</td>";
-                                                echo "<td>{$row['nama_user']}</td>";
-                                                echo "<td>{$row['barang']}</td>";
-                                                echo "<td>{$row['quantity']}</td>";
-                                                echo "<td>{$row['tanggal_pengembalian']}</td>";
-                                                echo "<td>{$row['status']}</td>"; // Closing tag td
-                                                echo "</tr>";
+                                          // Tampilkan detail peminjaman
+                                          if ($stmt->rowCount() > 0) {
+                                                foreach ($result as $row) { ?>
+                                                      <tr>
+                                                            <td class="d-flex justify-content-center"><?= $row['id_peminjaman']; ?></td>
+                                                            <td><?= $row['nama_user']; ?></td>
+                                                            <td><?= $row['nama_barang']; ?></td>
+                                                            <td class="ps-4"><?= $row['quantity']; ?></td>
+                                                            <td><?= $row['tanggal_peminjaman']; ?></td>
+                                                            <td><?= $row['tanggal_pengembalian']; ?></td>
+                                          <?php  }
+                                          } else {
+                                                echo "Detail peminjaman tidak ditemukan.";
                                           }
                                     } else {
-                                          echo "Detail peminjaman tidak ditemukan.";
+                                          echo "ID_Peminjaman tidak diberikan.";
                                     }
-                              } else {
-                                    echo "ID_Peminjaman tidak diberikan.";
-                              }
-                              ?>
+                                          ?>
 
-                        </tbody>
-                  </table>
+                              </tbody>
+                        </table>
+                  </div>
+
             </div>
-
       </div>
-      <footer class="page-footer">
-            <span>made by </span>
-            <a href="https://georgemartsoukos.com/" target="_blank">
-                  <img width="24" height="24" src="https://assets.codepen.io/162656/george-martsoukos-small-logo.svg" alt="George Martsoukos logo">
-            </a>
-      </footer>
 </body>
 
 </html>

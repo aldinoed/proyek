@@ -76,7 +76,7 @@ if (isset($_SESSION['user'])) {
             try {
                   $cookieAct;
                   $username = $_POST['username'];
-                  $passwd = $_POST['password'];
+                  $passwd = md5($_POST['password']);
                   $connect->exec("USE proyek");
                   $query = "SELECT * FROM user WHERE username = :username AND password = :passwd";
                   $statement = $connect->prepare($query);

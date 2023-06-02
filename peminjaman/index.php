@@ -61,22 +61,27 @@ if (isset($_POST['diambil'])) {
       }
 }
 
-if (isset($_POST['finish']) || isset($_POST['reject'])) {
+if (isset($_POST['finish'])) {
       try {
             $selectedId = $_POST['finish'];
-            $idBarang = $_POST['idbarang'];
             $connect->exec("USE proyek");
-            $jmlStmnt = "SELECT jumlah FROM barang WHERE id_barang = :id";
-            $stmnt = $connect->prepare($jmlStmnt);
-            $stmnt->bindParam(':id', $idBarang);
-            $stmnt->execute();
-            $jumlahAll = $stmnt->fetchColumn();
-            $jumlahAll += $_POST['quantity'];
-            $query = "UPDATE barang SET jumlah =  $jumlahAll WHERE id_barang = :barang";
+            $query = "SELECT * FROM detail_peminjaman WHERE id_peminjaman = :id";
             $statement = $connect->prepare($query);
-            $statement->bindParam(':barang', $idBarang);
+            $statement->bindParam(':id', $selectedId);
             $statement->execute();
-            $query = "DELETE FROM peminjaman WHERE id_peminjaman = :pinjam";
+            $data = $statement->fetchAll();
+
+            foreach ($data as $barang) {
+                  $idBarangPinjam = $barang['id_barang'];
+                  $qtyBarang = $barang['quantity'];
+
+                  $query = "UPDATE barang SET tersedia = tersedia + :qty WHERE id_barang = :id";
+                  $statement = $connect->prepare($query);
+                  $statement->bindParam(':qty', $qtyBarang);
+                  $statement->bindParam(':id', $idBarangPinjam);
+                  $statement->execute();
+            }
+            $query = "DELETE FROM detail_peminjaman WHERE id_peminjaman = :pinjam";
             $statement = $connect->prepare($query);
             $statement->bindParam(':pinjam', $selectedId);
             $statement->execute();
@@ -93,12 +98,13 @@ if (isset($_POST['finish']) || isset($_POST['reject'])) {
       <meta charset="UTF-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>SMART-ILS</title>
+      <title>Data Peminjaman</title>
       <!-- <link href="../css/bootstrap.min.css" rel="stylesheet"> -->
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
       <!-- font -->
       <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css2?family=Viga&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
@@ -250,7 +256,7 @@ if (isset($_POST['finish']) || isset($_POST['reject'])) {
                               <div class="table-view overflow-auto" style="height:80%;">
                                     <table class="table table-striped ">
                                           <thead>
-                                                <th scope="col">No.</th>
+                                                <th scope="col">Lihat</th>
                                                 <th scope="col">Id Peminjaman</th>
                                                 <th scope="col">Id Peminjam</th>
                                                 <th scope="col">Tanggal Pinjam</th>
@@ -266,10 +272,15 @@ if (isset($_POST['finish']) || isset($_POST['reject'])) {
                                                 $statement = $connect->prepare($query);
                                                 $statement->execute();
                                                 $jobs = $statement->fetchAll();
-                                                $i = 1;
                                                 foreach ($jobs as $job) {  ?>
                                                       <tr>
-                                                            <td><?php echo $i; ?></td>
+                                                            <td>
+                                                                  <form action="preview.php" method="GET">
+                                                                        <button class="btn" name="id_peminjaman" value="<?= $job['id_peminjaman']; ?>"><span class="material-symbols-outlined">
+                                                                                    open_in_new
+                                                                              </span></button>
+                                                                  </form>
+                                                            </td>
                                                             <td><?php echo $job['id_peminjaman']; ?></td>
                                                             <td><?php echo $job['id_user']; ?></td>
                                                             <td><?php echo $job['tanggal_peminjaman']; ?></td>
@@ -285,7 +296,7 @@ if (isset($_POST['finish']) || isset($_POST['reject'])) {
                                                                                     </span>&#160; Tolak &#160;</button>
                               </div>
                   </div>
-            <?php } else if ($job['status'] == 'Approved') { ?>
+            <?php } else if ($job['status'] == 'Approved' && $job['status_diambil'] != 'picked') { ?>
                   <div class="d-flex">
                         <input type="text" name="idbarang" value="<?= $job['id_barang']; ?>" style="display: none;">
                         <input style="display: none;" type="text" name="quantity" value="<?= $job['quantity']; ?>">
@@ -317,8 +328,7 @@ if (isset($_POST['finish']) || isset($_POST['reject'])) {
             </form>
             </td>
             </tr>
-      <?php $i++;
-                                                } ?>
+      <?php } ?>
       </tbody>
       </table>
             </div>
