@@ -98,6 +98,12 @@ if (isset($_SESSION['user'])) {
                         $stmnt->execute();
                         $role = $stmnt->fetchColumn();
                         $_SESSION['role'] = $role;
+                        $idStmnt = "SELECT id_user FROM user WHERE username = :username";
+                        $stmnt = $connect->prepare($idStmnt);
+                        $stmnt->bindParam(':username', $username);
+                        $stmnt->execute();
+                        $id = $stmnt->fetchColumn();
+                        $_SESSION['id'] = $id;
 
                         if (isset($_POST['remember'])) {
                               $cookieAct = $_POST['remember'];

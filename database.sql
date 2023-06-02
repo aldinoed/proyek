@@ -62,12 +62,12 @@ CREATE TABLE IF NOT EXISTS peminjaman(
   isReturn BOOLEAN NOT NULL
 );
 
-ALTER TABLE peminjaman
+ALTER TABLE detail_peminjaman
     ADD CONSTRAINT uKey FOREIGN KEY (id_user)
     REFERENCES user (id_user) ON UPDATE NO ACTION
     ON DELETE NO ACTION;
 
-ALTER TABLE peminjaman
+ALTER TABLE detail_peminjaman
 ADD CONSTRAINT bKey FOREIGN KEY (id_barang)
 REFERENCES barang (id_barang) ON UPDATE NO ACTION
 ON DELETE NO ACTION;

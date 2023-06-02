@@ -165,9 +165,10 @@ if (isset($_POST['delete'])) {
                         </div>
                         <?php
                         include '../connection.php';
-                        $currentUser = $_SESSION['user'];
+                        $idUser = $_SESSION['id'];
                         $connect->exec("USE proyek");
-                        $query = "SELECT * FROM detail_peminjaman WHERE nama_user = '$currentUser' ";
+
+                        $query = "SELECT dp.*, b.nama_barang, u.nama_user FROM detail_peminjaman dp INNER JOIN barang b ON dp.id_barang = b.id_barang INNER JOIN user u ON dp.id_user = u.id_user WHERE dp.id_user = '$idUser'";
                         $statement = $connect->prepare($query);
                         $statement->execute();
                         $rowCount = $statement->rowCount();
@@ -197,7 +198,7 @@ if (isset($_POST['delete'])) {
                                                       <tr>
                                                             <td><?= $i; ?></td>
                                                             <td><?= $user['id_peminjaman']; ?></td>
-                                                            <td><?= $user['barang']; ?></td>
+                                                            <td><?= $user['nama_barang']; ?></td>
                                                             <td><?= $user['quantity']; ?></td>
                                                             <td><?= $user['tanggal_pengembalian']; ?></td>
                                                             <td>

@@ -25,13 +25,13 @@ if (isset($_POST['acc'])) {
             $data = $statement->fetchAll();
 
             foreach ($data as $barang) {
-                  $namaBarang = $barang['barang'];
+                  $idBarang = $barang['id_barang'];
                   $qtyBarang = $barang['quantity'];
 
-                  $query = "UPDATE barang SET tersedia = tersedia - :qty WHERE nama_barang = :nama";
+                  $query = "UPDATE barang SET tersedia = tersedia - :qty WHERE id_barang = :id";
                   $statement = $connect->prepare($query);
                   $statement->bindParam(':qty', $qtyBarang);
-                  $statement->bindParam(':nama', $namaBarang);
+                  $statement->bindParam(':id', $idBarang);
                   $statement->execute();
             }
       } catch (PDOException $e) {
@@ -237,7 +237,8 @@ if (isset($_POST['finish'])) {
                                                 <?php
                                                 include '../connection.php';
                                                 $connect->exec("USE proyek");
-                                                $query = "SELECT id_peminjaman, nama_user, MAX(barang) AS barang, MAX(quantity) AS quantity, tanggal_pengembalian, status FROM detail_peminjaman GROUP BY id_peminjaman, nama_user, tanggal_pengembalian, status  ";
+                                                $query = "SELECT dp.id_peminjaman, MAX(u.nama_user) AS nama_user, MAX(b.nama_barang) AS nama_barang, MAX(dp.id_barang) AS id_barang, MAX(dp.quantity) AS quantity, MAX(dp.tanggal_pengembalian) AS tanggal_pengembalian, MAX(dp.status) AS status  FROM detail_peminjaman dp INNER JOIN barang b ON dp.id_barang = b.id_barang INNER JOIN user u ON dp.id_user = u.id_user GROUP BY dp.id_peminjaman";
+
                                                 $statement = $connect->prepare($query);
                                                 $statement->execute();
                                                 $jobs = $statement->fetchAll();
@@ -259,7 +260,7 @@ if (isset($_POST['finish'])) {
                                                                               </div>
                               </div>
                         <?php } else if ($job['status'] == 'Approved') { ?>
-                              <input type="text" name="idbarang" value="<?= $job['barang']; ?>" style="display: none;">
+                              <input type="text" name="idbarang" value="<?= $job['id_barang']; ?>" style="display: none;">
                               <input type="text" name="quantity" value="<?= $job['quantity']; ?>" style="display: none;">
                               <button type="submit" class="btn btn-primary d-flex align-items-center" style="font-size: 14px;" name="finish" value="<?= $job['id_peminjaman']; ?>"><span class="material-symbols-outlined">
                                           approval_delegation

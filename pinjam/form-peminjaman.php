@@ -39,7 +39,7 @@
                                                             <?php
                                                             include('../connection.php');
                                                             $connect->exec("USE proyek");
-                                                            $query = "SELECT nama_barang FROM barang";
+                                                            $query = "SELECT id_barang, nama_barang FROM barang";
                                                             $statement = $connect->query($query);
 
                                                             // Mengambil data barang dalam bentuk array
@@ -197,6 +197,7 @@ include('../connection.php');
 require '../deffunc.php';
 $connect->exec("USE proyek");
 if (isset($_POST['submit'])) {
+      $idUser = $_SESSION['id'];
       $barang = $_POST["barang"];
       $quantity = $_POST["quantity"];
       $idPinjam = cekUuid();
@@ -208,8 +209,13 @@ if (isset($_POST['submit'])) {
             // Memproses setiap pasangan barang dan quantity
             for ($i = 0; $i < count($barang); $i++) {
                   $barangItem = $barang[$i];
+                  $query = "SELECT id_barang FROM barang WHERE nama_barang  = '$barangItem'";
+                  $statement = $connect->prepare($query);
+                  $statement->execute();
+                  $idBarang = $statement->fetchColumn();
+
                   $quantityItem = $quantity[$i];
-                  $query = "INSERT INTO detail_peminjaman (id_peminjaman, nama_user, barang, quantity, tanggal_pengembalian, status) VALUES ('$idPinjam', '$namaUser','$barangItem', '$quantityItem', '$returnDate', 'Waiting')";
+                  $query = "INSERT INTO detail_peminjaman (id_peminjaman, id_user, id_barang, quantity, tanggal_pengembalian, status) VALUES ('$idPinjam', '$idUser','$idBarang', '$quantityItem', '$returnDate', 'Waiting')";
                   $statement = $connect->prepare($query);
                   $statement->execute();
             }
