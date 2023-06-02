@@ -300,65 +300,66 @@ if (isset($_POST['finish'])) {
                                                             <td class="d-flex justify-content-start">
                                                                   <form method="POST" action="../peminjaman/">
                                                                         <?php if ($job['status'] == 'Waiting') { ?>
-                                                                              <input type="text" style="display:none" name="idPinjam" value=" <?= $job['id_peminjaman']; ?>" id="">
                                                                               <div class=" d-flex">
+                                                                                    <input type="text" style="display:none" name="idPinjam" value=" <?= $job['id_peminjaman']; ?>" id="">
                                                                                     <button type="submit" class="btn btn-primary d-flex align-items-center" style="font-size: 14px;" name="acc" value="<?= $job['id_peminjaman']; ?>"><span class="material-symbols-outlined"> task_alt
                                                                                           </span> Setujui</button>
                                                                                     <button type="submit" class="btn btn-danger d-flex align-items-center" style="font-size: 14px;" name="reject" value="<?= $job['id_peminjaman']; ?>"><span class="material-symbols-outlined"> cancel
                                                                                           </span>&#160; Tolak &#160;</button>
                                                                               </div>
-                              </div>
-                        <?php } else if ($job['status'] == 'Approved' && $job['status_diambil'] != 'picked') { ?>
-                              <div class="d-flex">
-                                    <input type="text" name="idbarang" value="<?= $job['id_barang']; ?>" style="display: none;">
-                                    <input style="display: none;" type="text" name="quantity" value="<?= $job['quantity']; ?>">
-                                    <input style="display: none;" type="text" name="idPinjam" value="<?= $job['id_peminjaman']; ?>">
 
-                                    <button type="submit" class="btn btn-primary d-flex align-items-center" style="font-size: 14px;" name="diambil" value="<?= $job['id_peminjaman']; ?>"><span class="material-symbols-outlined">
-                                                add_task
-                                          </span>&#160; Diambil</button>
-                                    <button class="btn btn-danger" name="delete">
-                                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
-                                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
-                                          </svg>
-                                          Hapus
-                                    </button>
-                              </div>
-                        <?php } else if ($job['status_diambil'] == 'picked') { ?>
-                              <div class="d-flex">
-                                    <input type="text" name="idbarang" value="<?= $job['id_barang']; ?>" style="display: none;">
-                                    <input style="display: none;" type="text" name="quantity" value="<?= $job['quantity']; ?>">
-                                    <input style="display: none;" type="text" name="idPinjam" value="<?= $job['id_peminjaman']; ?>">
+                                                                              <!-- </div> -->
+                                                                        <?php } else if ($job['status'] == 'Approved' && $job['status_diambil'] != 'picked') { ?>
+                                                                              <div class="d-flex">
+                                                                                    <input type="text" name="idbarang" value="<?= $job['id_barang']; ?>" style="display: none;">
+                                                                                    <input style="display: none;" type="text" name="quantity" value="<?= $job['quantity']; ?>">
+                                                                                    <input style="display: none;" type="text" name="idPinjam" value="<?= $job['id_peminjaman']; ?>">
 
-                                    <button type="submit" class="btn btn-primary d-flex align-items-center" style="font-size: 14px;" name="finish" value="<?= $job['id_peminjaman']; ?>"><span class="material-symbols-outlined">
-                                                approval_delegation
-                                          </span>&#160; Dikembalikan</button>
+                                                                                    <button type="submit" class="btn btn-primary d-flex align-items-center" style="font-size: 14px;" name="diambil" value="<?= $job['id_peminjaman']; ?>"><span class="material-symbols-outlined">
+                                                                                                add_task
+                                                                                          </span>&#160; Diambil</button>
+                                                                                    <button class="btn btn-danger" name="delete">
+                                                                                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                                                                                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                                                                                          </svg>
+                                                                                          Hapus
+                                                                                    </button>
+                                                                              </div>
+                                                                        <?php } else if ($job['status_diambil'] == 'picked') { ?>
+                                                                              <div class="d-flex">
+                                                                                    <input type="text" name="idbarang" value="<?= $job['id_barang']; ?>" style="display: none;">
+                                                                                    <input style="display: none;" type="text" name="quantity" value="<?= $job['quantity']; ?>">
+                                                                                    <input style="display: none;" type="text" name="idPinjam" value="<?= $job['id_peminjaman']; ?>">
 
+                                                                                    <button type="submit" class="btn btn-primary d-flex align-items-center" style="font-size: 14px;" name="finish" value="<?= $job['id_peminjaman']; ?>"><span class="material-symbols-outlined">
+                                                                                                approval_delegation
+                                                                                          </span>&#160; Dikembalikan</button>
+
+                                                                              </div>
+                                                                        <?php } ?>
+                                                                  </form>
+                                                            </td>
+                                                      </tr>
+                                                <?php } ?>
+                                          </tbody>
+                                    </table>
                               </div>
                         <?php } ?>
-                        </form>
-                        </td>
-                        </tr>
-                  <?php } ?>
-                  </tbody>
-                  </table>
                   </div>
-            <?php } ?>
-            </div>
 
-            <script src="../js/bootstrap.bundle.min.js"></script>
-            <script src="../js/jquery-3.6.1.min.js"></script>
-            <script>
-                  $(document).ready(function() {
-                        $("#limit-records").change(function() {
-                              $('form').submit();
+                  <script src="../js/bootstrap.bundle.min.js"></script>
+                  <script src="../js/jquery-3.6.1.min.js"></script>
+                  <script>
+                        $(document).ready(function() {
+                              $("#limit-records").change(function() {
+                                    $('form').submit();
+                              })
                         })
-                  })
-            </script>
-            <?php
+                  </script>
+                  <?php
 
-            ?>
+                  ?>
 </body>
 
 </html>

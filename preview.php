@@ -148,9 +148,9 @@ include 'connection.php';
                                     if (isset($_GET['id_peminjaman'])) {
                                           $idPeminjaman = $_GET['id_peminjaman'];
 
-                                          $query = "SELECT dp.id_peminjaman, MAX(u.nama_user) AS nama_user, MAX(u.id_user) AS id_user,  MAX(b.nama_barang) AS nama_barang, MAX(dp.id_barang) AS id_barang, MAX(dp.quantity) AS quantity, MAX(dp.tanggal_pengembalian) AS tanggal_pengembalian,MAX(dp.tanggal_peminjaman) AS tanggal_peminjaman , MAX(dp.status_diambil) AS status_diambil ,MAX(dp.status) AS status  FROM detail_peminjaman dp INNER JOIN barang b ON dp.id_barang = b.id_barang INNER JOIN user u ON dp.id_user = u.id_user GROUP BY dp.id_peminjaman";
+                                          $query = "SELECT dp.id_peminjaman, b.nama_barang, dp.id_barang, dp.quantity, dp.tanggal_pengembalian, dp.tanggal_peminjaman, dp.status_diambil, dp.status  FROM detail_peminjaman dp  INNER JOIN barang b ON dp.id_barang = b.id_barang WHERE dp.id_peminjaman = :id";
                                           $stmt = $connect->prepare($query);
-                                          // $stmt->bindParam(':id_peminjaman', $idPeminjaman);
+                                          $stmt->bindParam(':id', $idPeminjaman);
                                           $stmt->execute();
                                           $result = $stmt->fetchAll();
 

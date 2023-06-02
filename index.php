@@ -190,7 +190,7 @@ session_start();
                                                 <tr>
                                                       <td>
                                                             <form action="preview.php" method="GET">
-                                                                  <button class="btn" name="id_peminjaman" value="<?= $job['id_peminjaman']; ?>"><span class="material-symbols-outlined">
+                                                                  <button class="btn" name="id_peminjaman" value="<?= $user['id_peminjaman']; ?>"><span class="material-symbols-outlined">
                                                                               open_in_new
                                                                         </span></button>
                                                             </form>
